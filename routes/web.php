@@ -15,16 +15,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-Route::get('/db', function(Request $req) { 
+Route::get('/profile', function (Request $req) {
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
     $user = $req->get("user");
     $usuario = null;
-    if($user) {
-        $usuario = 
-            DB::select("select username, name, lastName, email, phone, sex, birth, image from usuario where username='".$user."'");
+    if ($user) {
+        $usuario =
+            DB::select("select username, name, lastName, email, phone, sex, birth, image from usuario where username='" . $user . "'");
 
-        return !$usuario ? new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el usuario [".$user."]"]), 404) : view("user", (array)$usuario[0]);
+        return !$usuario ? new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el usuario [" . $user . "]"]), 404) : view("user", (array)$usuario[0]);
     } else {
         return new Response(view("error", [
             "code" => 400, "error" => "Debe especificar el usuario como: ?user=USER"
@@ -37,18 +37,30 @@ Route::get('/db', function(Request $req) {
     return $entorno;*/
 });
 
-Route::get('/p', function(Request $request) {
+Route::get('/profile', function (Request $request) {
     return $request->fullUrl();
 });
 
-Route::get('/', function(Request $request) {
+Route::get('/', function (Request $request) {
     $queryParams = (object)$request->all();
     $nombre = "no name was given";
-    if(property_exists($queryParams, "nombre")) {
+    if (property_exists($queryParams, "nombre")) {
         $property = "nombre";
         $nombre = $queryParams->$property;
         //$queryParams["nombre"]
     }
 
     return view('test', ['name' => $nombre]);
+});
+
+Route::post('register/{username}', function (Request $request, $username) {
+    $query  = $request->all();
+    $body = $request->getContent();
+
+    $response = new Response(
+        ["username" => "Quiero registrar a: " . $username, "params" => $query]
+
+    );
+
+    return $response;
 });
