@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-Route::get('/profile', function (Request $req) {
+Route::get('/profile', function(Request $req) { 
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
     $user = $req->get("user");
@@ -37,30 +37,51 @@ Route::get('/profile', function (Request $req) {
     return $entorno;*/
 });
 
-Route::get('/profile', function (Request $request) {
-    return $request->fullUrl();
-});
+Route::post('/register/{username}', function(Request $request, $username) {
 
-Route::get('/', function (Request $request) {
-    $queryParams = (object)$request->all();
-    $nombre = "no name was given";
-    if (property_exists($queryParams, "nombre")) {
-        $property = "nombre";
-        $nombre = $queryParams->$property;
-        //$queryParams["nombre"]
+    /*$query = $request->all(); //Trae todo, tanto query como body
+    $body = $request->getContent(); //body como contenido de texto
+    $response = new Response(["username" => "Quiero registrar a: " . $username,
+        "params" => $query,
+        "body" => json_decode($body) //Parsear el contenido del texto
+    ]);*/
+
+    $username = strtolower($username); //Estandarizar el username a lowercase
+    preg_match("/[a-zñ0-9\-_]{4,}/", $username, $matches);
+    if(count($matches) != 1) {
+        return new Response(["error" => "El usuario debe ser solo con caracteres del tipo letras, números, - y _ y mínimo 4 caracteres (" . $username . ")"], 400);
+    } else if(strlen($matches[0]) != strlen($username)) {
+        return new Response(["error" => "El usuario debe ser solo con caracteres del tipo letras, números, - y _ y mínimo 4 caracteres (" . $username . ")"], 400);
     }
 
-    return view('test', ['name' => $nombre]);
-});
+    $count = DB::selectOne("select count(username) from usuario where username = '" . $username . "'");
 
-Route::post('register/{username}', function (Request $request, $username) {
-    $query  = $request->all();
-    $body = $request->getContent();
+    $keys = array_keys((array)$count);
+    $count = (array)$count;
 
-    $response = new Response(
-        ["username" => "Quiero registrar a: " . $username, "params" => $query]
+    if($count[$keys[0]] != 0) {
+        //Ya existe este usuario... Duplicado
+        return new Response([
+            "error" => "El usuario que escogiste ya está registrado"
+        ], 409);
+    }
+    
+    $request->validate([
+        "email" => "required",
+        "name" => "required",
+        "lastName" => "optional",
+        "password" => "required",
+        "birth" => "optional",
+        "phone" => "optional",
+        "sex" => "optional"
+    ]);
 
-    );
+    $body = $request->all();
 
-    return $response;
+    //$response = ["resultado" => $count];
+
+    //$response->withCookie(cookie('utt', 'este valor', 100000));
+
+    $body["username"] = $username;
+    return $body;
 });
