@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-Route::get('/db', function(Request $req) { 
+Route::get('/profile', function(Request $req) { 
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
     $user = $req->get("user");
@@ -37,18 +37,15 @@ Route::get('/db', function(Request $req) {
     return $entorno;*/
 });
 
-Route::get('/p', function(Request $request) {
-    return $request->fullUrl();
-});
+Route::post('/register/{username}', function(Request $request, $username) {
 
-Route::get('/', function(Request $request) {
-    $queryParams = (object)$request->all();
-    $nombre = "no name was given";
-    if(property_exists($queryParams, "nombre")) {
-        $property = "nombre";
-        $nombre = $queryParams->$property;
-        //$queryParams["nombre"]
-    }
+    $query = $request->all();
+    $body = $request->getContent();
+    $response = new Response(["username" => "Quiero registrar a: " . $username,
+        "params" => $query,
+        "body" => json_decode($body)
+    ]);
+    $response->withCookie(cookie('utt', 'este valor', 100000));
 
-    return view('test', ['name' => $nombre]);
+    return $response;
 });
