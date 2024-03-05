@@ -78,10 +78,28 @@ Route::post('/register/{username}', function(Request $request, $username) {
 
     $body = $request->all();
 
+    $username = strtolower($username);
+    $email = $body['email'];
+    $name = $body['name'];
+    $password = bcrypt($body['password']);
+    
+    DB::table('Usuario')->insert([
+        'username' => $username,
+        'email' => $email,
+        'name' => $name,
+        'password' => $password
+    ]);
+
+    return [
+        'username' => $username,
+        'email' => $email,
+        'name' => $name,
+        'password' => $password
+    ];
+
+
     //$response = ["resultado" => $count];
-
     //$response->withCookie(cookie('utt', 'este valor', 100000));
-
-    $body["username"] = $username;
-    return $body;
+    //$body["username"] = $username;
+    //return $body;
 });
