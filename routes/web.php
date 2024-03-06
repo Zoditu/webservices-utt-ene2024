@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+Route::get('/token', function(Request $req) { 
+
+    $token = Str::random(15);
+    return $token;
+
+});
+
 
 Route::get('/profile', function(Request $req) { 
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
