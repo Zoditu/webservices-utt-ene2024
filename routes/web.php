@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 
 Route::get('/token', function(Request $req) { 
 
-    $token = Str::random(15);
+    $token = base64_encode(Str::random(15));
     return $token;
 
 });
