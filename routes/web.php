@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+Route::get('/token', function (Request $req) {
+
+    $token = Str::random(15);
+    return $token;
+});
+
 
 Route::get('/profile', function (Request $req) {
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
@@ -65,7 +73,6 @@ Route::post('/register/{username}', function (Request $request, $username) {
             "error" => "El usuario que escogiste ya está registrado"
         ], 409);
     }
-
     $request->validate([
         "email" => "required",
         "name" => "required",
@@ -78,10 +85,28 @@ Route::post('/register/{username}', function (Request $request, $username) {
 
     $body = $request->all();
 
+    $username = strtolower($username);
+    $email = $body['email'];
+    $name = $body['name'];
+    $password = bcrypt($body['password']);
+
+    DB::table('Usuario')->insert([
+        'username' => $username,
+        'email' => $email,
+        'name' => $name,
+        'password' => $password
+    ]);
+
+    return [
+        'username' => $username,
+        'email' => $email,
+        'name' => $name,
+        'password' => $password
+    ];
+
+
     //$response = ["resultado" => $count];
-
     //$response->withCookie(cookie('utt', 'este valor', 100000));
-
-    $body["username"] = $username;
-    return $body;
+    //$body["username"] = $username;
+    //return $body;
 });
