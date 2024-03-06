@@ -39,13 +39,49 @@ Route::get('/profile', function(Request $req) {
 
 Route::post('/register/{username}', function(Request $request, $username) {
 
-    $query = $request->all();
-    $body = $request->getContent();
+    /*$query = $request->all(); //Trae todo, tanto query como body
+    $body = $request->getContent(); //body como contenido de texto
     $response = new Response(["username" => "Quiero registrar a: " . $username,
         "params" => $query,
-        "body" => json_decode($body)
-    ]);
-    $response->withCookie(cookie('utt', 'este valor', 100000));
+        "body" => json_decode($body) //Parsear el contenido del texto
+    ]);*/
 
-    return $response;
+    $username = strtolower($username); //Estandarizar el username a lowercase
+    preg_match("/[a-zñ0-9\-_]{4,}/", $username, $matches);
+    if(count($matches) != 1) {
+        return new Response(["error" => "El usuario debe ser solo con caracteres del tipo letras, números, - y _ y mínimo 4 caracteres (" . $username . ")"], 400);
+    } else if(strlen($matches[0]) != strlen($username)) {
+        return new Response(["error" => "El usuario debe ser solo con caracteres del tipo letras, números, - y _ y mínimo 4 caracteres (" . $username . ")"], 400);
+    }
+
+    $count = DB::selectOne("select count(username) from usuario where username = '" . $username . "'");
+
+    $keys = array_keys((array)$count);
+    $count = (array)$count;
+
+    if($count[$keys[0]] != 0) {
+        //Ya existe este usuario... Duplicado
+        return new Response([
+            "error" => "El usuario que escogiste ya está registrado"
+        ], 409);
+    }
+    
+    $request->validate([
+        "email" => "required",
+        "name" => "required",
+        "lastName" => "optional",
+        "password" => "required",
+        "birth" => "optional",
+        "phone" => "optional",
+        "sex" => "optional"
+    ]);
+
+    $body = $request->all();
+
+    //$response = ["resultado" => $count];
+
+    //$response->withCookie(cookie('utt', 'este valor', 100000));
+
+    $body["username"] = $username;
+    return $body;
 });
