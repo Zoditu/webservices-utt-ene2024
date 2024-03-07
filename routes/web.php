@@ -67,21 +67,35 @@ Route::post('/register/{username}', function(Request $request, $username) {
     }
     
     $request->validate([
-        "email" => "required",
-        "name" => "required",
-        "lastName" => "optional",
-        "password" => "required",
-        "birth" => "optional",
-        "phone" => "optional",
-        "sex" => "optional"
+        "email" => "required|email|max:255",
+        "name" => "required|max:20",
+        "password" => "required|min:8|max:16",
+        "lastName" => "max:50",
+        "birth" => "date",
+        "phone" => "min:10|max:12",
+        "sex" => "max:20"
     ]);
 
     $body = $request->all();
-
+    $body["username"] = $username;
     //$response = ["resultado" => $count];
-
     //$response->withCookie(cookie('utt', 'este valor', 100000));
 
-    $body["username"] = $username;
-    return $body;
+    $objectBody = (object)$body;
+    $cleanData = [
+        "username" => $username,
+        "email" => $body["email"],
+        "password" => $body["password"],
+        "name" => $body["name"],
+        "lastName" => property_exists($objectBody, "lastName") ? $body["lastName"] : "",
+        "phone" => property_exists($objectBody, "phone") ? $body["phone"] : "",
+        "sex" => property_exists($objectBody, "sex") ? $body["sex"] : "",
+        "birth" => property_exists($objectBody, "birth") ? $body["birth"] : null
+    ];
+    
+    $insert = DB::table("usuario")->insert($cleanData);
+
+    return [
+        "ok" => $insert == 1 ? true : false
+    ];
 });
