@@ -16,13 +16,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-Route::get('/token', function (Request $req) {
-
-    $token = Str::random(15);
-    return $token;
-});
-
-
 Route::get('/profile', function (Request $req) {
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
@@ -73,40 +66,47 @@ Route::post('/register/{username}', function (Request $request, $username) {
             "error" => "El usuario que escogiste ya está registrado"
         ], 409);
     }
+
     $request->validate([
-        "email" => "required",
-        "name" => "required",
-        "lastName" => "optional",
-        "password" => "required",
-        "birth" => "optional",
-        "phone" => "optional",
-        "sex" => "optional"
+        "email" => "required|email|max:255",
+        "name" => "required|max:20",
+        "password" => "required|min:8|max:16",
+        "lastName" => "max:50",
+        "birth" => "date",
+        "phone" => "min:10|max:12",
+        "sex" => "max:20"
     ]);
 
     $body = $request->all();
-
-    $username = strtolower($username);
-    $email = $body['email'];
-    $name = $body['name'];
-    $password = bcrypt($body['password']);
-
-    DB::table('Usuario')->insert([
-        'username' => $username,
-        'email' => $email,
-        'name' => $name,
-        'password' => $password
-    ]);
-
-    return [
-        'username' => $username,
-        'email' => $email,
-        'name' => $name,
-        'password' => $password
-    ];
-
-
+    $body["username"] = $username;
     //$response = ["resultado" => $count];
     //$response->withCookie(cookie('utt', 'este valor', 100000));
-    //$body["username"] = $username;
-    //return $body;
+
+    $objectBody = (object)$body;
+    $cleanData = [
+        "username" => $username,
+        "email" => $body["email"],
+        "password" => $body["password"],
+        "name" => $body["name"],
+        "lastName" => property_exists($objectBody, "lastName") ? $body["lastName"] : "",
+        "phone" => property_exists($objectBody, "phone") ? $body["phone"] : "",
+        "sex" => property_exists($objectBody, "sex") ? $body["sex"] : "",
+        "birth" => property_exists($objectBody, "birth") ? $body["birth"] : null
+    ];
+
+    $insert = DB::table("usuario")->insert($cleanData);
+
+    return [
+        "ok" => $insert == 1 ? true : false
+    ];
+});
+
+Route::get('/token', function (Request $req) {
+
+    $token = base64_encode(Str::random(15));
+    if ($token == null) {
+        return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
+    }
+
+    return $token;
 });
