@@ -17,12 +17,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-Route::get('/token', function(Request $req) { 
-
-    $token = base64_encode(Str::random(15));
-    return $token;
-
-});
 
 
 Route::get('/profile', function(Request $req) { 
@@ -47,14 +41,11 @@ Route::get('/profile', function(Request $req) {
     return $entorno;*/
 });
 
-Route::match(['get', 'post'], '/register/{username}', [RegisterUsername::class, 'RegisterUser']);
-
-Route::get('/token', function (Request $req) {
-
+Route::get('/token/{username}', function (Request $request, $username) {
     $token = base64_encode(Str::random(15));
     if ($token == null) {
-        return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
+        return response()->view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"], 404);
     }
 
-    return view('token', ['token' => $token]);
+    return view('token', ['token' => $token, 'username' => $username]);
 });
