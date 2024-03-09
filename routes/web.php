@@ -47,6 +47,4 @@ Route::get('/token', function (Request $req) {
     if ($token == null) {
         return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
     }
-
-    return view('token', ['token' => $token]);
 });

@@ -68,8 +68,11 @@ class RegisterUsername extends Controller
 
         $insert = DB::table("usuario")->insert($cleanData);
 
-        $selectUser = DB::table("usuario")->where('username', $username)->first();
+        $usuario = null;
+        $usuario = DB::select("select username, name, lastName, email, phone, sex, birth, image from usuario where username='" . $username . "'");
 
-        return view('token', (array)$selectUser[0]);
+        return view('token',  (array)$usuario[0]);
+
+        // return (array)$usuario[0];
     }
 }

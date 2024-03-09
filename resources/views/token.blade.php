@@ -8,8 +8,9 @@
 </head>
 
 <body>
-    <div>El token es: {{$token}} </div>
-    <div>Los datos del usuario son: {{$username}} </div>
+    <div>
+        Usuario: {{$username}}
+    </div>
 </body>
 
 </html>
