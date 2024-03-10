@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 class RegisterUsername extends Controller
 {
@@ -68,8 +69,19 @@ class RegisterUsername extends Controller
 
         $insert = DB::table("usuario")->insert($cleanData);
 
-        $selectUser = DB::table("usuario")->where('username', $username)->first();
+        $usuario = DB::table('usuario')->where('username', $username)->first();
 
-        return view('token', (array)$selectUser[0]);
+        session(['consultaDelUsuario' => $usuario->username]);
+        $usuarioConsulta = session('consultaDelUsuario');
+
+        //mandar llamar la funcion de validar token para insertarla en la vista del token 
+
+
+        // return view('token', ['consultaDelUsuario' => $usuarioConsulta]);
+        $token = ValidarToken::ValidarToken();
+
+        return Route::get('token', [['consultaDelUsuario' => $usuarioConsulta, 'tokenGenerado' => $token]]);
+
+        // return (array)$usuario[0];
     }
 }
