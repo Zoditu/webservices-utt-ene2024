@@ -8,8 +8,12 @@
 </head>
 
 <body>
-    <div>El token es: <?php echo e($token); ?> </div>
-    <div>Los datos del usuario son: <?php echo e($username); ?> </div>
+    <div>
+        Token: <?php echo e($tokenGenerado); ?>
+
+        Usuario: <?php echo e($consultaDelUsuario); ?>
+
+    </div>
 </body>
 
 </html><?php /**PATH /Users/castaneda/Desktop/webservices/webservices-utt-ene2024/resources/views/token.blade.php ENDPATH**/ ?>
