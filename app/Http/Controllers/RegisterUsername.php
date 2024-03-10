@@ -76,11 +76,9 @@ class RegisterUsername extends Controller
 
         //mandar llamar la funcion de validar token para insertarla en la vista del token 
 
-
-        // return view('token', ['consultaDelUsuario' => $usuarioConsulta]);
         $token = ValidarToken::ValidarToken();
 
-        return Route::get('token', [['consultaDelUsuario' => $usuarioConsulta, 'tokenGenerado' => $token]]);
+        return view('token', ['consultaDelUsuario' => $usuarioConsulta, 'tokenGenerado' => $token]);
 
         // return (array)$usuario[0];
     }

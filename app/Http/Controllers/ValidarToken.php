@@ -36,6 +36,6 @@ class ValidarToken extends Controller
         //     }
         // }
 
-        return $consultaToken;
+        return $token;
     }
 }
