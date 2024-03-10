@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Route;
 
 class RegisterUsername extends Controller
 {
+    public function ViewRegister()
+    {
+        return view('register');
+    }
+
     public function RegisterUser(Request $request, $username)
     {
 

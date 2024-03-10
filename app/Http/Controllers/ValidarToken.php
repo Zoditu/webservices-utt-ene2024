@@ -26,16 +26,13 @@ class ValidarToken extends Controller
 
         $queryToken = DB::table('token')->where('username', $username)->first();
 
-        session(['tokenGenerado' => $queryToken->token]);
-        $consultaToken = session('tokenGenerado');
+        $consultaToken = $queryToken->token;
 
-        // while ($intentos <= 3) {
-        //     if ($token == null) {
-        //         return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
-        //         $intentos++;
-        //     }
-        // }
+        if ($token == null) {
+            return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
+            $intentos++;
+        }
 
-        return $token;
+        return $consultaToken;
     }
 }
