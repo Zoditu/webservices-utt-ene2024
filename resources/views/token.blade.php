@@ -9,7 +9,8 @@
 
 <body>
     <div>
-        Usuario: {{$username}}
+        Token: {{$tokenGenerado}}
+        Usuario: {{$consultaDelUsuario}}
     </div>
 </body>
 

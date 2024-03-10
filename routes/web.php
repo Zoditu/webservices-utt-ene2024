@@ -42,9 +42,4 @@ Route::get('/profile', function (Request $req) {
 Route::match(['get', 'post'], '/register/{username}', [RegisterUsername::class, 'RegisterUser']);
 
 Route::get('/token', function (Request $req) {
-
-    $token = base64_encode(Str::random(15));
-    if ($token == null) {
-        return new Response(view("error", ["code" => 404, "error" => "No se ha encontrado el token [" . $token . "]"]), 404);
-    }
 });
