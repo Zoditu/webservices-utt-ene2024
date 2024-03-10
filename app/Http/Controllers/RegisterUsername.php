@@ -68,7 +68,7 @@ class RegisterUsername extends Controller
 
         $insert = DB::table("usuario")->insert($cleanData);
 
-        $selectUser = DB::table("usuario")->where('username', $username)->first();
+        $usuario = DB::table("usuario")->where('username', $username)->first();
 
         session(['consultaDelUsuario' => $usuario->username]);
         $usuarioConsulta = session('consultaDelUsuario');
