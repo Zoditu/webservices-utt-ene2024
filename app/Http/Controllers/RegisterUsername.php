@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class RegisterUsername extends Controller
 {
+    public function ViewRegister()
+    {
+        return view('register');
+    }
+
     public function RegisterUser(Request $request, $username)
     {
 

@@ -64,6 +64,8 @@ Route::get('/profile', function(Request $req) {
     return $entorno;*/
 });
 
+Route::get('/registrar', [RegisterUsername::class, 'ViewRegister']);
+
 Route::match(['get', 'post'], '/register/{username}', [RegisterUsername::class, 'RegisterUser']);
 
 Route::get('/token', function (Request $req) {
