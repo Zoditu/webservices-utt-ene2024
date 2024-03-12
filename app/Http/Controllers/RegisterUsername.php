@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\View;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 
 class RegisterUsername extends Controller
 {
@@ -76,7 +75,7 @@ class RegisterUsername extends Controller
 
         $insert = DB::table("usuario")->insert($cleanData);
 
-        $usuario = DB::table('usuario')->where('username', $username)->first();
+        $usuario = DB::table("usuario")->where('username', $username)->first();
 
         session(['consultaDelUsuario' => $usuario->username]);
         $usuarioConsulta = session('consultaDelUsuario');
