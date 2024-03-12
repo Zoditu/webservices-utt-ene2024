@@ -50,9 +50,10 @@ class RegisterUsername extends Controller
             "name" => "required|max:20",
             "password" => "required|min:8|max:16",
             "lastName" => "max:50",
-            "birth" => "date",
             "phone" => "min:10|max:12",
-            "sex" => "max:20"
+            "sex" => "max:20",
+            "birth" => "date",
+            "estado" => "min:0|max:1"
         ]);
 
         $body = $request->all();
@@ -64,12 +65,13 @@ class RegisterUsername extends Controller
         $cleanData = [
             "username" => $username,
             "email" => $body["email"],
-            "password" => $body["password"],
             "name" => $body["name"],
+            "password" => $body["password"],
             "lastName" => property_exists($objectBody, "lastName") ? $body["lastName"] : "",
             "phone" => property_exists($objectBody, "phone") ? $body["phone"] : "",
             "sex" => property_exists($objectBody, "sex") ? $body["sex"] : "",
-            "birth" => property_exists($objectBody, "birth") ? $body["birth"] : null
+            "birth" => property_exists($objectBody, "birth") ? $body["birth"] : null,
+            "estado" => $body["estado"] = 0
         ];
 
         $insert = DB::table("usuario")->insert($cleanData);
