@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RegisterUsername;
+use App\Http\Controllers\ValidarToken;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -70,3 +71,5 @@ Route::match(['get', 'post'], '/register/{username}', [RegisterUsername::class, 
 
 Route::get('/token', function (Request $req) {
 });
+
+Route::get('/token/estado/{token}', [ValidarToken::class, 'VTokenPost']);
