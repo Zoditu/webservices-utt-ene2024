@@ -53,4 +53,29 @@ class ValidarToken extends Controller
             return new Response(view("error", ["code" => 404, "error" => "El usuario fue invalidado"]), 404);
         }
     }
+
+
+    public function cancelartoken(Request $request, $token)
+    {
+        $varToken = $token;
+
+
+        //verificar el estado del token
+        $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
+
+
+        if ($queryTokenVal->estado == null) {
+            $query = DB::table("token")->where("token", $varToken)->update(["estado" => 0]);
+            //estado actualizado
+            $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
+            return $queryTokenVal->estado;
+        } else if ($queryTokenVal->estado == 1) {
+            return new Response(view("error", ["code" => 404, "error" => "El Token ya se ha usado"]), 409);
+        } else if ($queryTokenVal->estado == 0) {
+            return new Response(view("error", ["code" => 404, "error" => "El Token fue cancelado"]), 202);
+        }
+    }
+
+
+
 }

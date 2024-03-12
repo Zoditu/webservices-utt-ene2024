@@ -73,3 +73,4 @@ Route::get('/token', function (Request $req) {
 });
 
 Route::get('/token/estado/{token}', [ValidarToken::class, 'VTokenPost']);
+Route::get('/token/deny/{token}', [ValidarToken::class, 'cancelartoken']);
