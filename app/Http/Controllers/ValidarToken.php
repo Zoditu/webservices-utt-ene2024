@@ -40,7 +40,7 @@ class ValidarToken extends Controller
     {
         $varToken = $token;
 
-        $queryTokenVal = DB::table("token")->where("token", $request->$varToken)->first();
+        $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
 
 
         if ($queryTokenVal->estado == null) {
@@ -48,7 +48,7 @@ class ValidarToken extends Controller
             $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
             return $queryTokenVal->estado;
         } else if ($queryTokenVal->estado == 1) {
-            return new Response(view("error", ["code" => 404, "error" => "El usuario ya fue validado"]), 404);
+            return new Response(view("error", ["code" => 404, "error" => "El usuario ya fue validado"]), 409);
         } else if ($queryTokenVal->estado == 0) {
             return new Response(view("error", ["code" => 404, "error" => "El usuario fue invalidado"]), 404);
         }
