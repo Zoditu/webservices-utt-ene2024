@@ -99,3 +99,21 @@ Route::post('/register/{username}', function(Request $request, $username) {
         "ok" => $insert == 1 ? true : false
     ];
 });
+
+
+
+Route::get('/deshabilitar', function(Request $request) {
+    $username = strtolower($request->input('user')); // tomo el valor del request y lo estandarizo al lowercase como en el registro
+
+    // aqui verifico si el usuario si existe en la bd
+    $userExists = DB::table('Usuario')->where('username', $username)->exists();
+
+    if (!$userExists) {
+        return response()->json(['error' => 'El usuario no existe'], 404);
+    }
+
+    // aqui se hace el update del usuario a 0 lo que indica que se deshabilita la cuenta
+    DB::table('Usuario')->where('username', $username)->update(['estado' => 0]);
+
+    return response()->json(['message' => 'Estado del usuario cambiado a 0 exitosamente'], 200);
+});
