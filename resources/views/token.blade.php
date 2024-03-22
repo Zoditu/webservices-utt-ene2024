@@ -7,6 +7,7 @@
     <title>Activacion Token</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 
@@ -48,11 +49,11 @@ body, html {
       <center>
       <div class="row text-center container">
         <div class="col-6">
-          <button type="button" class="btn-block btn-zoom" style="background:#1a2556; color:white; border-radius:10px; border:0px; font-size:20px; padding:3%; width:100%">Activar</button>
+          <button type="button" id="activarBtn" class="btn-block btn-zoom btn-activar" style="background:#1a2556; color:white; border-radius:10px; border:0px; font-size:20px; padding:3%; width:100%">Activar</button>
         </div>
         
         <div class="col-6">
-          <button class="btn-block btn-zoom" type="button" style="background:#1a2556; color:white; border-radius:10px; border:0px; font-size:20px; padding:3%; width:100%">Cancelar</button>
+          <button class="btn-block btn-zoom btn-cancelar" id="cancelarBtn" type="button" style="background:#1a2556; color:white; border-radius:10px; border:0px; font-size:20px; padding:3%; width:100%">Cancelar</button>
         </div>
       </div>
       </center>
@@ -71,6 +72,20 @@ body, html {
 
 </div>
 
-  
+<script>
+  var tokenGenerado = "{{ $tokenGenerado ?? '' }}";
+
+  $(document).ready(function() {
+    $('#activarBtn').click(function() {
+        window.location.href = '/token/estado/' + tokenGenerado;
+    });
+
+    $('#cancelarBtn').click(function() {
+      window.location.href = '/token/deny/' + tokenGenerado;
+    });
+});
+
+
+</script>
 </body>
 </html>
