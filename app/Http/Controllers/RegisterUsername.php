@@ -77,12 +77,11 @@ class RegisterUsername extends Controller
 
         $usuario = DB::table("usuario")->where('username', $username)->first();
 
-        session(['consultaDelUsuario' => $usuario->username]);
-        $usuarioConsulta = session('consultaDelUsuario');
+        $usuarioConsulta = $usuario->username;
 
         //mandar llamar la funcion de validar token para insertarla en la vista del token 
 
-        $token = ValidarToken::ValidarToken();
+        $token = ValidarToken::ValidarToken($usuarioConsulta);
 
         return view('token', ['consultaDelUsuario' => $usuarioConsulta, 'tokenGenerado' => $token]);
 

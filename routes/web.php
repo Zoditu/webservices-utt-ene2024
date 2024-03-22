@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 
 
 
-Route::get('/profile', function(Request $req) { 
+Route::get('/profile', function (Request $req) {
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
     $user = $req->get("user");
@@ -43,7 +43,7 @@ Route::get('/profile', function(Request $req) {
 });
 
 
-Route::get('/profile', function(Request $req) { 
+Route::get('/profile', function (Request $req) {
     //create table Usuario(username varchar(20) primary key, name varchar(20), lastName varchar(50), email tinytext, phone varchar(12), sex varchar(20), birth date, password varchar(16), image mediumtext);
     //alter table usuario add column image mediumtext;
     $user = $req->get("user");
@@ -73,4 +73,4 @@ Route::get('/token', function (Request $req) {
 });
 
 Route::get('/token/estado/{token}', [ValidarToken::class, 'VTokenPost']);
-Route::get('/token/deny/{token}', [ValidarToken::class, 'cancelartoken']);
+Route::get('/token/deny/{token}', [ValidarToken::class, 'CTokenPost']);
