@@ -6,7 +6,7 @@
     <title>AMISTAD</title>
 </head>
 <body>
-    <h1>Eres amigo de {{$usu2}} desde el {{date('d-m-Y', strtotime($fecha->fecha))}}</h1>
+    <h1>Eres amigo de {{$usu2}} desde el {{date('d-m-Y', strtotime($fecha))}}</h1>
 
     <form action="{{ route('amigos.busqueda') }}" method="get">
     <button type="submit">Regresar</button>

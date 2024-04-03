@@ -34,20 +34,13 @@ class ListaAmigosController extends Controller
         $data = new datos();
         $info = $data->getusername($request);
 
+        $amistad = $data->getamistad($request);
         
-        $result = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[0]."' and 
-        usuario_recibe= '".$info[1]."'");
-        $result2 = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[1]."' and 
-        usuario_recibe= '".$info[0]."'");
 
-        if($result == null){
-            if($result2 == null){
-                return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0], "usu2" => $info[1]]);
-            }else{
-                return view('veramistad', ["fecha" => $result2, "usu1" => $info[0], "usu2" => $info[1]]);
-            }
+        if($amistad[0] == null){
+            return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0], "usu2" => $info[1]]);
         }else{
-            return view('veramistad', ["fecha" => $result, "usu1" => $info[0], "usu2" => $info[1]]);
+            return view('veramistad', ["fecha" => $amistad[0], "usu1" => $info[0], "usu2" => $info[1]]);
         }
        
     }
