@@ -47,22 +47,18 @@ class ListaAmigosController extends Controller
 
 
     public function block(Request $request){
-        $user1 = $request->get('user1');
-        $user2 = $request->get('user2');
-
-        $result = DB::selectOne("select username from usuario where name= '".$user1."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$user2."'");
-
+        $data = new datos();
+        $info = $data->getusername($request);
 
        $data=
         [
-           "usuario_quebloquea" => $result->username,
-           "usuario_bloqueado" => $result2->username,
+           "usuario_quebloquea" => $info[0],
+           "usuario_bloqueado" => $info[1],
         ];
         
         $insert = DB::table("bloqueo")->insert($data);
 
-        return view('busqueda', ["resul" => 'true', "user1" => $user1, "user2" => $user2]);
+        return view('busqueda', ["resul" => 'true', "user1" => $info[0], "user2" => $info[1]]);
     }
 
     public function accept(Request $request){
