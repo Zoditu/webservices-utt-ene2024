@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListaAmigosController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -99,3 +100,38 @@ Route::post('/register/{username}', function(Request $request, $username) {
         "ok" => $insert == 1 ? true : false
     ];
 });
+
+
+Route::post('lista-amigos/añadir', [ListaAmigosController::class, 'add'])->name('amigos.add');
+Route::put('lista-amigos/aceptarsoli', [ListaAmigosController::class, 'accept'])->name('amigos.accept');
+Route::put('lista-amigos/rechazarsoli');
+Route::delete('lista-amigos/eliminar');
+Route::post('lista-amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
+Route::delete('lista-amigos/desbloquear');
+Route::get('lista-amigos/veramistad', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
+
+//ejemplo de vista de quien manda solicitu de amistad
+Route::get('busqueda/perfilresultado', function(){
+    $result = DB::selectOne("select name from usuario where username= 'aaha'");
+    $user = array_values((array)$result);
+    $str = implode($user);
+
+    $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
+    $user2 = array_values((array)$result2);
+    $str2 = implode($user2);
+    return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'false' ]);
+})->name('amigos.busqueda');
+
+//ejemplo de vista de quien recibe solicitud de amist
+Route::get('busqueda/perfilresultado2', function(){
+    $result = DB::selectOne("select name from usuario where username= 'aaha'");
+    $user = array_values((array)$result);
+    $str = implode($user);
+
+    $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
+    $user2 = array_values((array)$result2);
+    $str2 = implode($user2);
+    return view("busqueda2", ['user1' => $str, 'user2' => $str2, "resul" => 'false' ]);
+})->name('amigos.busqueda2');
+
+Route::get('prueba', [ListaAmigosController::class, 'prueba'])->name('amigos.ver2');
