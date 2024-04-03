@@ -11,10 +11,19 @@ class Datos{
         $user1 = $request->get('user1');
         $user2 = $request->get('user2');
 
-        $result = DB::selectOne("select username from usuario where name= '".$user1."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$user2."'");
+        return [$user1, $user2];
+    }
+    public function getusername(Request $request){
+        $get = $this->getuser($request);
 
-        return [$result, $result2, $user1, $user2];
+        $result = DB::selectOne("select username from usuario where name= '".$get[0]."'");
+        $result2 = DB::selectOne("select username from usuario where name= '".$get[1]."'");
+
+        return [$result->username, $result2->username, $get[0], $get[1]];
+    }
+
+    public function getamistad($user1, $user2){
+        
     }
 }
 ?>;

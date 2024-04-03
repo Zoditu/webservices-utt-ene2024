@@ -13,7 +13,7 @@ class ListaAmigosController extends Controller
 
     public function add(Request $request){
         $data = new datos();
-        $info = $data->getuser($request);
+        $info = $data->getusername($request);
 
 
        $data=
@@ -32,22 +32,22 @@ class ListaAmigosController extends Controller
 
     public function ver(Request $request){
         $data = new datos();
-        $info = $data->getuser($request);
+        $info = $data->getusername($request);
 
-
-        $result = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[0]->username."' and 
-        usuario_recibe= '".$info[1]->username."'");
-        $result2 = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[1]->username."' and 
-        usuario_recibe= '".$info[0]->username."'");
+        
+        $result = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[0]."' and 
+        usuario_recibe= '".$info[1]."'");
+        $result2 = DB::selectOne("select fecha from amistad where usuario_solicita= '".$info[1]."' and 
+        usuario_recibe= '".$info[0]."'");
 
         if($result == null){
             if($result2 == null){
-                return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0]->username, "usu2" => $info[1]->username]);
+                return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0], "usu2" => $info[1]]);
             }else{
-                return view('veramistad', ["fecha" => $result2, "usu1" => $info[0]->username, "usu2" => $info[1]->username]);
+                return view('veramistad', ["fecha" => $result2, "usu1" => $info[0], "usu2" => $info[1]]);
             }
         }else{
-            return view('veramistad', ["fecha" => $result, "usu1" => $info[0]->username, "usu2" => $info[1]->username]);
+            return view('veramistad', ["fecha" => $result, "usu1" => $info[0], "usu2" => $info[1]]);
         }
        
     }
