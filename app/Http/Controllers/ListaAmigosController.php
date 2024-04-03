@@ -63,38 +63,19 @@ class ListaAmigosController extends Controller
 
     public function accept(Request $request){
         //obtengo los nombres de la pagina donde se acepta la solicitud de amistad
-        $user1 = $request->get('user1');
-        $user2 = $request->get('user2');
+        $data = new datos();
+        $info = $data->getusername($request);
         $respuestaboton = $request->get('respuesta');
 
-        //a partir de los nombres consulto el user que le corresponde a cada uno
-        $result = DB::selectOne("select username from usuario where name= '".$user1."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$user2."'");
-
-        //a partir de los usuarios busco el registro de que la solicitud de amistad ha sido enviada y 
-        //obtengo el id de la amistad para posteriormente actuaizar el estado de ese registro
-        
-        //El usuario que acepta la solicitu siempre sera en la tabla el usuario_recibe
         if($respuestaboton == true){
-        $amistad = DB::selectOne("select id_amistad from amistad where usuario_solicita= '".$user2."' and 
-        usuario_recibe= '".$user1."'");
+             $amistad = $data->getamistad($request);
 
-        //Comprobar si el registro de la solicitud enviada existe en la tabla amistad
-        if($amistad == null){
-          $respuesta = false;  
-        }else{
             $update = DB::update("update amistad set estado = 'aceptada' where id_amistad = 
-            '".$amistad->id_amistad."'");
-            if($update){
-                $respuesta = true;
-            }else{
-                $respuesta = false;
-            }
-        }
+            '".$amistad[1]."'");
+            $respuesta = "La solicitud fue aceptada";
     }else{
         $respuesta = "La solicitud fue rechazada";
-    }
-
+}
         return $respuesta;
 
     }

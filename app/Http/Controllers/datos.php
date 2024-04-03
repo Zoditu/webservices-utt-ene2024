@@ -25,15 +25,15 @@ class Datos{
     public function getamistad(Request $request){
         $get = $this->getusername($request);
 
-        $result = DB::selectOne("select fecha from amistad where usuario_solicita= '".$get[1]."' and 
+        $result = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$get[1]."' and 
         usuario_recibe= '".$get[0]."'");
-        $result2 = DB::selectOne("select fecha from amistad where usuario_solicita= '".$get[0]."' and 
+        $result2 = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$get[0]."' and 
         usuario_recibe= '".$get[1]."'");
 
         if($result == null){
-        return [$result2->fecha];
+        return [$result2->fecha, $result2->id_amistad];
         }else{
-            return [$result->fecha];
+            return [$result->fecha,$result->id_amistad];
         }
     }
 }

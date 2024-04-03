@@ -8,13 +8,14 @@
 <body>
 <h1>Usuario logeado: {{strtoupper($user1)}}</h1>
 
-<form action="{{ route('amigos.accept') }}" method="put">
+<form action="{{ route('amigos.accept') }}" method="POST">
     @csrf
+    @method('PUT')
     <input type="hidden" name="user1" value="{{$user1}}">
     <input type="hidden" name="user2" value="{{$user2}}">
     <p>{{$user2}} te ha enviado una solicitud de amistad</p>
-<button type="submit" value="{{$respuesta =true}}">Aceptar</button>
-<button type="submit" value="{{$respuesta =false}}">Rechazar</button>
+<button type="submit" name="respuesta" value="true">Aceptar</button>
+<button type="submit" name="respuesta" value="false">Rechazar</button>
 
 
 </form>
