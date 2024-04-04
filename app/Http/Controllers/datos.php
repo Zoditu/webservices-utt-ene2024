@@ -14,12 +14,12 @@ class Datos{
         return [$user1, $user2];
     }
     public function getusername(Request $request){
-        $get = $this->getuser($request);
+        $nombre = $this->getuser($request);
 
-        $result = DB::selectOne("select username from usuario where name= '".$get[0]."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$get[1]."'");
+        $result = DB::selectOne("select username from usuario where name= '".$nombre[0]."'");
+        $result2 = DB::selectOne("select username from usuario where name= '".$nombre[1]."'");
 
-        return [$result->username, $result2->username, $get[0], $get[1]];
+        return [$result->username, $result2->username, $nombre[0], $nombre[1]];
     }
 
     public function getamistad(Request $request){

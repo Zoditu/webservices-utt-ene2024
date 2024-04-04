@@ -18,8 +18,8 @@ class ListaAmigosController extends Controller
 
        $data=
         [
-           "usuario_solicita" => $info[0]->username,
-           "usuario_recibe" => $info[1]->username,
+           "usuario_solicita" => $info[0],
+           "usuario_recibe" => $info[1],
            "estado" => 'pendiente'
 
         ];
@@ -62,7 +62,6 @@ class ListaAmigosController extends Controller
     }
 
     public function respondersoli(Request $request){
-        //obtengo los nombres de la pagina donde se acepta la solicitud de amistad
         $data = new datos();
         $info = $data->getusername($request);
         $respuestaboton = $request->get('respuesta');
@@ -71,15 +70,25 @@ class ListaAmigosController extends Controller
         if($respuestaboton == "true"){
             $update = DB::update("update amistad set estado = 'aceptada' where id_amistad = 
             '".$amistad[1]."'");
-            $respuesta = "La solicitud fue aceptada";
+            $respuesta = "aceptada";
+            return view('busqueda2', ["res" => $respuesta, "user1" => $info[2], "user2" => $info[3]]);
         }else{
             $update = DB::update("update amistad set estado = 'rechazada' where id_amistad = 
             '".$amistad[1]."'");
-            $respuesta = "La solicitud fue rechazada";
+            return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
         }
-        return $respuesta;
 
     }
+
+        public function eliminar(Request $request){
+            $data = new datos();
+            $info = $data->getusername($request);
+            $amistad = $data->getamistad($request);
+
+            $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[1]."'");
+
+            return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
+        }
 
     public function prueba(){
         $data = new datos();

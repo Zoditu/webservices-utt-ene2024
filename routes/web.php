@@ -104,7 +104,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
 
 Route::post('lista-amigos/añadir', [ListaAmigosController::class, 'add'])->name('amigos.add');
 Route::put('lista-amigos/respondersoli', [ListaAmigosController::class, 'respondersoli'])->name('amigos.respondersoli');
-Route::delete('lista-amigos/eliminar');
+Route::delete('lista-amigos/eliminar', [ListaAmigosController::class, 'eliminar'])->name('amigos.eliminar');
 Route::post('lista-amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
 Route::delete('lista-amigos/desbloquear');
 Route::get('lista-amigos/veramistad', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
@@ -130,7 +130,7 @@ Route::get('busqueda/perfilresultado2', function(){
     $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
     $user2 = array_values((array)$result2);
     $str2 = implode($user2);
-    return view("busqueda2", ['user1' => $str, 'user2' => $str2, "resul" => 'false' ]);
+    return view("busqueda2", ['user1' => $str, 'user2' => $str2, "res" => '' ]);
 })->name('amigos.busqueda2');
 
 Route::get('prueba', [ListaAmigosController::class, 'prueba'])->name('amigos.ver2');
