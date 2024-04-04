@@ -8,7 +8,7 @@
 <body>
 <h1>Usuario logeado: {{strtoupper($user1)}}</h1>
 
-<form action="{{ route('amigos.accept') }}" method="POST">
+<form action="{{ route('amigos.respondersoli') }}" method="POST">
     @csrf
     @method('PUT')
     <input type="hidden" name="user1" value="{{$user1}}">

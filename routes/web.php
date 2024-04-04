@@ -103,8 +103,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
 
 
 Route::post('lista-amigos/añadir', [ListaAmigosController::class, 'add'])->name('amigos.add');
-Route::put('lista-amigos/aceptarsoli', [ListaAmigosController::class, 'accept'])->name('amigos.accept');
-Route::put('lista-amigos/rechazarsoli');
+Route::put('lista-amigos/respondersoli', [ListaAmigosController::class, 'respondersoli'])->name('amigos.respondersoli');
 Route::delete('lista-amigos/eliminar');
 Route::post('lista-amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
 Route::delete('lista-amigos/desbloquear');

@@ -31,7 +31,7 @@ class Datos{
         usuario_recibe= '".$get[1]."'");
 
         if($result == null){
-        return [$result2->fecha, $result2->id_amistad];
+            return [$result2->fecha, $result2->id_amistad];
         }else{
             return [$result->fecha,$result->id_amistad];
         }
