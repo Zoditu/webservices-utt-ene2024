@@ -23,12 +23,12 @@ class Datos{
     }
 
     public function getamistad(Request $request){
-        $get = $this->getusername($request);
+        $username = $this->getusername($request);
 
-        $result = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$get[1]."' and 
-        usuario_recibe= '".$get[0]."'");
-        $result2 = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$get[0]."' and 
-        usuario_recibe= '".$get[1]."'");
+        $result = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$username[1]."' and 
+        usuario_recibe= '".$username[0]."'");
+        $result2 = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$username[0]."' and 
+        usuario_recibe= '".$username[1]."'");
 
         if($result == null){
             return [$result2->fecha, $result2->id_amistad];
@@ -36,5 +36,23 @@ class Datos{
             return [$result->fecha,$result->id_amistad];
         }
     }
+
+    public function getbloqueo(Request $request){
+        $username = $this->getusername($request);
+
+        $result = DB::selectOne("select id_bloque from bloqueo where usuario_quebloquea= '".$username[1]."' and 
+        usuario_bloqueado= '".$username[0]."'");
+        $result2 = DB::selectOne("select id_bloque from bloqueo where usuario_quebloquea= '".$username[0]."' and 
+        usuario_bloqueado= '".$username[1]."'");
+
+        if($result == null){
+            return $result2->id_bloque;
+        }else{
+            return $result->id_bloque;
+        }
+    }
+
+    //HACER EL METODO PARA OBTENER REGISTRO DE LA TABLA BLOQUEOS
+
 }
 ?>;

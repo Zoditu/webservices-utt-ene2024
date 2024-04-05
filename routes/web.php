@@ -106,7 +106,7 @@ Route::post('lista-amigos/añadir', [ListaAmigosController::class, 'add'])->name
 Route::put('lista-amigos/respondersoli', [ListaAmigosController::class, 'respondersoli'])->name('amigos.respondersoli');
 Route::delete('lista-amigos/eliminar', [ListaAmigosController::class, 'eliminar'])->name('amigos.eliminar');
 Route::post('lista-amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
-Route::delete('lista-amigos/desbloquear');
+Route::delete('lista-amigos/desbloquear', [ListaAmigosController::class, 'desbloquear'])->name('amigos.unblock');
 Route::get('lista-amigos/veramistad', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
 
 //ejemplo de vista de quien manda solicitu de amistad

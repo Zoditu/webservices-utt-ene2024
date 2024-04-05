@@ -58,7 +58,7 @@ class ListaAmigosController extends Controller
         
         $insert = DB::table("bloqueo")->insert($data);
 
-        return view('busqueda', ["resul" => 'true', "user1" => $info[0], "user2" => $info[1]]);
+        return view('busqueda', ["resul" => 'true', "user1" => $info[2], "user2" => $info[3]]);
     }
 
     public function respondersoli(Request $request){
@@ -88,6 +88,17 @@ class ListaAmigosController extends Controller
             $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[1]."'");
 
             return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
+        }
+
+        public function desbloquear(Request $request){
+            $data = new datos();
+            $info = $data->getusername($request);
+            $bloqueo = $data->getbloqueo($request);
+
+            $delete = DB::delete("delete from bloqueo where id_bloque = '".$bloqueo."'");
+
+            return "Has desbloqueado al usuario";
+
         }
 
     public function prueba(){

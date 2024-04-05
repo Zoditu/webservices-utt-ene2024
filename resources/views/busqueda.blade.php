@@ -32,17 +32,23 @@
 
 </form>
 
-<form action="{{ route('amigos.block') }}" method="post">
-    @csrf
-    <input type="hidden" name="user1" value="{{$user1}}">
-    <input type="hidden" name="user2" value="{{$user2}}">
-    @if($resul == 'true')
-    <button type="submit">Desbloquear</button>
-    @else
-    <button type="submit">Bloquear</button>
-    @endif
+@if($resul == 'true')
+    <form action="{{ route('amigos.unblock') }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="user1" value="{{$user1}}">
+        <input type="hidden" name="user2" value="{{$user2}}">
+        <button type="submit">Desbloquear</button>
+    </form>
+@else
+    <form action="{{ route('amigos.block') }}" method="POST">
+        @csrf
+        <input type="hidden" name="user1" value="{{$user1}}">
+        <input type="hidden" name="user2" value="{{$user2}}">
+        <button type="submit">Bloquear</button>
+    </form>
+@endif
 
-</form>
 
 
 </body>
