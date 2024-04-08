@@ -56,3 +56,28 @@ Route::get('/', function(Request $request) {
 
     return view('test', ['name' => $nombre]);
 });
+
+//MENSAJE
+// Leer mensaje
+Route::get('/mensajes', 'MessageController@index');
+
+// Enviar mensaje
+Route::post('/mensajes', 'MessageController@store');
+
+// Editar mensaje
+Route::put('/mensajes/{id_mensaje}', 'MessageController@update');
+
+// Eliminar mensaje
+Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy');
+
+// Leer nuevo mensaje en un chat de un usuario
+Route::get('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@show');
+
+// Almacenar un nuevo mensaje en un chat de un usuario
+Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{id_usuario}', 'MessageController@store');
+
+// Actualizar un mensaje en un chat de un usuario
+Route::put('/usuarios/{id_usuario}/chats/{id_chat}/mensajes/{id_mensaje}/{mensaje}', 'MessageController@update');
+
+// Eliminar un mensaje en un chat de un usuario
+Route::delete('/usuarios/{id_usuario}/chats/{id_chat}/mensajes/{id_mensaje}/{mensaje}', 'MessageController@destroy');
