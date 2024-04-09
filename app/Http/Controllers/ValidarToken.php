@@ -42,7 +42,9 @@ class ValidarToken extends Controller
 
 
         if ($queryTokenVal->estado === null) {
-            $query = DB::table("token")->where("token", $varToken)->update(["estado" => 1]);
+            $queryToken = DB::table("token")->where("token", $varToken)->update(["estado" => 1]);
+            $updateusuario = DB::table("usuario")->where("username", $queryTokenVal->username)->update(["estado" => 1]);
+
             $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
             return $queryTokenVal->estado;
         } else if ($queryTokenVal->estado === 1) {
@@ -65,7 +67,8 @@ class ValidarToken extends Controller
 
 
         if ($queryTokenVal->estado === null) {
-            $query = DB::table("token")->where("token", $varToken)->update(["estado" => 0]);
+            $queryToken = DB::table("token")->where("token", $varToken)->update(["estado" => 0]);
+            $updateusuario = DB::table("username")->where("token", $queryTokenVal->username)->update(["estado" => 0]);
             //estado actualizado
             $queryTokenVal = DB::table("token")->where("token", $varToken)->first();
             return $queryTokenVal->estado;
