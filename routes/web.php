@@ -133,4 +133,5 @@ Route::get('busqueda/perfilresultado2', function(){
     return view("busqueda2", ['user1' => $str, 'user2' => $str2, "res" => '' ]);
 })->name('amigos.busqueda2');
 
-Route::get('prueba', [ListaAmigosController::class, 'prueba'])->name('amigos.ver2');
+Route::get('prueba', [ListaAmigosController::class, 'prueba']);
+

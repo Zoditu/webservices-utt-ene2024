@@ -102,10 +102,11 @@ class ListaAmigosController extends Controller
         }
 
     public function prueba(){
-        $data = new datos();
+        //$data = new datos();
         //$infor = $data->getuser();
 
        // return $infor[0]->username;
+       return view('search');
     }
  
 }
