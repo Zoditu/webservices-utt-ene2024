@@ -111,72 +111,8 @@ Route::post('amigos/bloquear', [ListaAmigosController::class, 'block'])->name('a
 Route::delete('amigos/desbloquear', [ListaAmigosController::class, 'desbloquear'])->name('amigos.unblock');
 //agregar en el controlador por paths buscar la amistad. PENDIENTE
 Route::get('amigos/ver', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
+Route::get('search/perfilbuscado', [ListaAmigosController::class, 'search'])->name('amigos.busqueda');
 
 
-//hacer un controller de la vista de busqueda para que en esa viste verifique si existe una amistad y en que estado esta
-// o si el usuario esta bloqueado y asi saber que opciones se deben mostrar.
-//ejemplo de vista de quien manda solicitu de amistad
-Route::get('busqueda/perfilresultado', function(){
-    $data = new datos();
-
-    $result = DB::selectOne("select name from usuario where username= 'aaha'");
-    $user = array_values((array)$result);
-    $str = implode($user);
-
-    $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
-    $user2 = array_values((array)$result2);
-    $str2 = implode($user2);
-
-    $bloqueo = $data->getbloqueotemporal('aaha', 'beny06');
-    $amistad = $data->getamistadtemporal('aaha','beny06');
-
-    if($bloqueo != "vacio"){
-        if($bloqueo[1] == 'aaha'){
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'desbloquear' ]);
-        }else{
-            return "NOT FOUND";
-        }
-       }else{
-    switch($amistad[0]){
-        case "pendiente":
-            if($amistad[1] == "aaha"){
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendientesolicita' ]);
-            }else{
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendienterecibe' ]);
-            }
-        case "aceptada":
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada' ]);
-        case "rechazada":
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada' ]);
-        default:
-            return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste' ]);
-    }
-}
-
-   // if($bloqueo != "vacio"){
-     //   return "NOT FOUND";
-    //}
-    //elseif($amistad[2] == "pendiente"){
-      //  return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendiente' ]);
-    //}elseif($amistad[2] == "aceptada"){
-      //  return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada' ]);
-    //}elseif($amistad[2] == "rechazada"){
-      //  return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada' ]);
-    //}elseif($amistad == "no existe"){
-      //  return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste' ]);
-    //}
-})->name('amigos.busqueda');
-
-//ejemplo de vista de quien recibe solicitud de amist
-Route::get('busqueda/perfilresultado2', function(){
-    $result = DB::selectOne("select name from usuario where username= 'aaha'");
-    $user = array_values((array)$result);
-    $str = implode($user);
-
-    $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
-    $user2 = array_values((array)$result2);
-    $str2 = implode($user2);
-    return view("busqueda2", ['user1' => $str, 'user2' => $str2, "res" => '' ]);
-})->name('amigos.busqueda2');
 
 Route::get('prueba', [ListaAmigosController::class, 'prueba']);

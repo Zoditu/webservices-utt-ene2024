@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\datos;
 use App\Http\Controllers\Redirect;
 
-//AL ENTRAR A LA VISTA SE DETECTA QUE EL USUARIO QUE INTENTA BUSCAR LO TIENE BLOQUEADO 
-//SE DEBERA MOSTRAR UNA VISTA DE ERROR Y NO SE MOSTRARA EL PERFIL DEL USUARIO
 
 class ListaAmigosController extends Controller
 {
@@ -31,9 +29,7 @@ class ListaAmigosController extends Controller
         if($insert){
             return redirect()->route('amigos.busqueda');
         }else{
-            //VISTA DE ERROR
-            //SI LA PERSONA A LA QUE INTENTA MANDARLE LA SOLI LO TIENE BLOQUEADO, NO PUEDE MANDARLE SOLI
-            //SI EL USUARIO YA NO EXISTE
+            return view('error', ["code" => "404", "error" => "NOT FOUND"]);
         }
 
     }
@@ -69,11 +65,11 @@ class ListaAmigosController extends Controller
         if($insert){
         return redirect()->route('amigos.busqueda');
         }else{
-            //VISTA DE ERROR
-            //SI EL USUARIO YA NO EXISTE
+            return view('error', ["code" => "404", "error" => "NOT FOUND"]);
         }
     }
 
+    //CAMBIAR EL RECHAZAR, SI LA RECHAZA DEBE ELIMINAR EL REGISTRO DE LA SOLICITUD DE LA TABLA
     public function respondersoli(Request $request){
         $data = new datos();
         $info = $data->getusername($request);
@@ -87,11 +83,8 @@ class ListaAmigosController extends Controller
 
             if($update){
                 return redirect()->route('amigos.busqueda');  
-            //return view('busqueda2', ["res" => $respuesta, "user1" => $info[2], "user2" => $info[3]]);
             }else{
-                //VISTA DE ERROR
-                //SI EL USUARIO YA NO EXISTE 
-                //SI EL USUARIO QUE ENVIO LA SOLICITUD YA LA ELIMINO
+                return view('error', ["code" => "404", "error" => "NOT FOUND"]);
             }
         }else{
             $update = DB::update("update amistad set estado = 'rechazada' where id_amistad = 
@@ -99,15 +92,10 @@ class ListaAmigosController extends Controller
 
             if($update){
                 return redirect()->route('amigos.busqueda');  
-            //return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
             }else{
-                //VISTA DE ERROR
-                //SI EL USUARIO YA NO EXISTE
+                return view('error', ["code" => "404", "error" => "NOT FOUND"]);
             }
-
-            
         }
-
     }
 
         public function eliminar(Request $request){
@@ -119,7 +107,6 @@ class ListaAmigosController extends Controller
 
             return redirect()->route('amigos.busqueda');
 
-            //return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
         }
 
         public function desbloquear(Request $request){
@@ -132,6 +119,47 @@ class ListaAmigosController extends Controller
             return redirect()->route('amigos.busqueda');
 
         }
+
+
+
+    
+    public function search(){
+        $data = new datos();
+
+        $result = DB::selectOne("select name from usuario where username= 'aaha'");
+        $user = array_values((array)$result);
+        $str = implode($user);
+    
+        $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
+        $user2 = array_values((array)$result2);
+        $str2 = implode($user2);
+    
+        $bloqueo = $data->getbloqueotemporal('aaha', 'beny06');
+        $amistad = $data->getamistadtemporal('aaha','beny06');
+    
+        if($bloqueo != "vacio"){
+            if($bloqueo[1] == 'aaha'){
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'desbloquear' ]);
+            }else{
+                return "NOT FOUND";
+            }
+           }else{
+        switch($amistad[0]){
+            case "pendiente":
+                if($amistad[1] == "aaha"){
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendientesolicita' ]);
+                }else{
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendienterecibe' ]);
+                }
+            case "aceptada":
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada' ]);
+            case "rechazada":
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada' ]);
+            default:
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste' ]);
+        }
+    }
+}
 
     public function prueba(){
         $data = new datos();
