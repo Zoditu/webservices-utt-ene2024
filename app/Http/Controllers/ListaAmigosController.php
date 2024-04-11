@@ -69,33 +69,19 @@ class ListaAmigosController extends Controller
         }
     }
 
-    //CAMBIAR EL RECHAZAR, SI LA RECHAZA DEBE ELIMINAR EL REGISTRO DE LA SOLICITUD DE LA TABLA
     public function respondersoli(Request $request){
         $data = new datos();
         $info = $data->getusername($request);
-        $respuestaboton = $request->get('respuesta');
         $amistad = $data->getamistad($request);
 
-        if($respuestaboton == "true"){
             $update = DB::update("update amistad set estado = 'aceptada' where id_amistad = 
             '".$amistad[1]."'");
-            $respuesta = "aceptada";
 
             if($update){
                 return redirect()->route('amigos.busqueda');  
             }else{
                 return view('error', ["code" => "404", "error" => "NOT FOUND"]);
             }
-        }else{
-            $update = DB::update("update amistad set estado = 'rechazada' where id_amistad = 
-            '".$amistad[1]."'");
-
-            if($update){
-                return redirect()->route('amigos.busqueda');  
-            }else{
-                return view('error', ["code" => "404", "error" => "NOT FOUND"]);
-            }
-        }
     }
 
         public function eliminar(Request $request){
