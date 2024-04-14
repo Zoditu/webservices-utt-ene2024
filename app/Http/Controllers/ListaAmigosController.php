@@ -13,13 +13,13 @@ class ListaAmigosController extends Controller
 
     public function add(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
+        $nombres = $data->getusername($request);
 
 
        $data=
         [
-           "usuario_solicita" => $info[0],
-           "usuario_recibe" => $info[1],
+           "usuario_solicita" => $nombres[0],
+           "usuario_recibe" => $nombres[1],
            "estado" => 'pendiente'
 
         ];
@@ -34,17 +34,18 @@ class ListaAmigosController extends Controller
 
     }
 
-    public function ver($user1, $user2){
+    public function ver($user1, $user2,Request $request){
         $data = new datos();
-        $info = $data->getusername2($user1, $user2);
+        $username1 = $request->route('username1');
+        $username2 = $request->route('username2');
 
-        $amistad = $data->getamistadtemporal($info[0], $info[1]);
+        $amistad = $data->getamistad($username1, $username2);
         
 
         if($amistad[0] == null){
-            return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0], "usu2" => $info[1]]);
+            return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $user1, "usu2" => $user2]);
         }else{
-            return view('veramistad', ["fecha" => $amistad[0], "usu1" => $info[0], "usu2" => $info[1]]);
+            return view('veramistad', ["fecha" => $amistad[4], "usu1" => $user1, "usu2" => $user2]);
         }
        
     }
@@ -52,12 +53,12 @@ class ListaAmigosController extends Controller
 
     public function block(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
+        $nombres = $data->getusername($request);
 
        $data=
         [
-           "usuario_quebloquea" => $info[0],
-           "usuario_bloqueado" => $info[1],
+           "usuario_quebloquea" => $nombres[0],
+           "usuario_bloqueado" => $nombres[1],
         ];
         
         $insert = DB::table("bloqueo")->insert($data);
@@ -71,11 +72,11 @@ class ListaAmigosController extends Controller
 
     public function respondersoli(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
-        $amistad = $data->getamistad($request);
+        $nombres = $data->getusername($request);
+        $amistad = $data->getamistad($nombres[0], $nombres[1]);
 
             $update = DB::update("update amistad set estado = 'aceptada' where id_amistad = 
-            '".$amistad[1]."'");
+            '".$amistad[3]."'");
 
             if($update){
                 return redirect()->route('amigos.busqueda');  
@@ -86,10 +87,10 @@ class ListaAmigosController extends Controller
 
         public function eliminar(Request $request){
             $data = new datos();
-            $info = $data->getusername($request);
-            $amistad = $data->getamistad($request);
+            $nombres = $data->getusername($request);
+            $amistad = $data->getamistad($nombres[0], $nombres[1]);
 
-            $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[1]."'");
+            $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[3]."'");
 
             return redirect()->route('amigos.busqueda');
 
@@ -97,10 +98,10 @@ class ListaAmigosController extends Controller
 
         public function desbloquear(Request $request){
             $data = new datos();
-            $info = $data->getusername($request);
-            $bloqueo = $data->getbloqueo($request);
+            $nombres = $data->getusername($request);
+            $bloqueo = $data->getbloqueo($nombres[0], $nombres[1]);
 
-            $delete = DB::delete("delete from bloqueo where id_bloque = '".$bloqueo."'");
+            $delete = DB::delete("delete from bloqueo where id_bloque = '".$bloqueo[0]."'");
 
             return redirect()->route('amigos.busqueda');
 
@@ -120,12 +121,12 @@ class ListaAmigosController extends Controller
         $user2 = array_values((array)$result2);
         $str2 = implode($user2);
     
-        $bloqueo = $data->getbloqueotemporal('aaha', 'beny06');
-        $amistad = $data->getamistadtemporal('aaha','beny06');
+        $bloqueo = $data->getbloqueo('aaha', 'beny06');
+        $amistad = $data->getamistad('aaha','beny06');
     
         if($bloqueo != "vacio"){
             if($bloqueo[1] == 'aaha'){
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'desbloquear' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'desbloquear', 'username1' => 'aaha', 'username2' => 'beny06' ]);
             }else{
                 return "NOT FOUND";
             }
@@ -133,16 +134,16 @@ class ListaAmigosController extends Controller
         switch($amistad[0]){
             case "pendiente":
                 if($amistad[1] == "aaha"){
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendientesolicita' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendientesolicita', 'username1' => 'aaha', 'username2' => 'beny06' ]);
                 }else{
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendienterecibe' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendienterecibe', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
                 }
             case "aceptada":
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
             case "rechazada":
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
             default:
-                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste' ]);
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
         }
     }
 }
@@ -153,8 +154,10 @@ class ListaAmigosController extends Controller
 
        // return $infor[0]->username;
        //return view('search');
-       $blok = $data->getbloqueotemporal('aaha', 'beny06');
+       $blok = $data->getbloqueo('aaha', 'beny06');
 
     }
  
 }
+
+?>;

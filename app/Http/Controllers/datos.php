@@ -7,71 +7,32 @@ use Illuminate\Support\Facades\DB;
 
 
 class Datos{
-    public function getuser(Request $request){
-        $user1 = $request->input('user1');
-        $user2 = $request->input('user2');
+    public function getusername(Request $request){
+        $user1 = $request->input('username1');
+        $user2 = $request->input('username2');
 
         return [$user1, $user2];
     }
-    public function getusername(Request $request){
-        $nombre = $this->getuser($request);
 
-        $result = DB::selectOne("select username from usuario where name= '".$nombre[0]."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$nombre[1]."'");
+    public function getamistad($username1, $username2){
 
-        return [$result->username, $result2->username, $nombre[0], $nombre[1]];
-    }
-
-    public function getamistad(Request $request){
-        $username = $this->getusername($request);
-
-        $result = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$username[1]."' and 
-        usuario_recibe= '".$username[0]."'");
-        $result2 = DB::selectOne("select fecha, id_amistad from amistad where usuario_solicita= '".$username[0]."' and 
-        usuario_recibe= '".$username[1]."'");
-
-        if($result == null){
-            return [$result2->fecha, $result2->id_amistad];
-        }else{
-            return [$result->fecha,$result->id_amistad];
-        }
-    }
-
-    public function getbloqueo(Request $request){
-        $username = $this->getusername($request);
-
-        $result = DB::selectOne("select id_bloque from bloqueo where usuario_quebloquea= '".$username[1]."' and 
-        usuario_bloqueado= '".$username[0]."'");
-        $result2 = DB::selectOne("select id_bloque from bloqueo where usuario_quebloquea= '".$username[0]."' and 
-        usuario_bloqueado= '".$username[1]."'");
-
-        if($result == null){
-            return $result2->id_bloque;
-        }else{
-            return $result->id_bloque;
-        }
-    }
-
-
-    public function getamistadtemporal($username1, $username2){
-
-        $result = DB::selectOne("select estado, usuario_solicita, usuario_recibe from amistad where usuario_solicita= '".$username2."' and 
+        $result = DB::selectOne("select fecha, id_amistad, estado, usuario_solicita, usuario_recibe from amistad where usuario_solicita= '".$username2."' and 
         usuario_recibe= '".$username1."'");
-        $result2 = DB::selectOne("select estado, usuario_solicita, usuario_recibe from amistad where usuario_solicita= '".$username1."' and 
+        $result2 = DB::selectOne("select fecha, id_amistad, estado, usuario_solicita, usuario_recibe from amistad where usuario_solicita= '".$username1."' and 
         usuario_recibe= '".$username2."'");
 
         if($result == null){
             if($result2 == null){
                 return "no existe";
             }else{
-            return [$result2->estado, $result2->usuario_solicita, $result2->usuario_recibe];
+            return [$result2->estado, $result2->usuario_solicita, $result2->usuario_recibe, $result2->id_amistad, $result2->fecha];
             }
         }else{
-            return [$result->estado, $result->usuario_solicita, $result->usuario_recibe];
+            return [$result->estado, $result->usuario_solicita, $result->usuario_recibe, $result->id_amistad, $result->fecha];
         }
     }
 
-    public function getbloqueotemporal($username1, $username2){
+    public function getbloqueo($username1, $username2){
 
         $result = DB::selectOne("select id_bloque, usuario_quebloquea, usuario_bloqueado from bloqueo where usuario_quebloquea= '".$username2."' and 
         usuario_bloqueado= '".$username1."'");
@@ -89,13 +50,7 @@ class Datos{
         }
     }
 
-    public function getusername2($user1, $user2){
-
-        $result = DB::selectOne("select username from usuario where name= '".$user1."'");
-        $result2 = DB::selectOne("select username from usuario where name= '".$user2."'");
-
-        return [$result->username, $result2->username, $user1, $user2];
-    }
+  
 
 
 

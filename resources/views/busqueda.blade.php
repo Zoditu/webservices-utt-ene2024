@@ -12,14 +12,14 @@
 <h3>Usuario buscado: {{strtoupper($user2)}}</h3>
 
 @if($resul == 'aceptada')
-<form action="{{ route('amigos.ver', ['user1' => $user1, 'user2' => $user2]) }}" method="get">
+<form action="{{ route('amigos.ver', ['username1' => $username1, 'username2' => $username2]) }}" method="get">
 <button type="submit">Ver Amistad</button>
 </form>
 
 <form action="{{ route('amigos.block') }}" method="POST">
         @csrf
-        <input type="hidden" name="user1" value="{{$user1}}">
-        <input type="hidden" name="user2" value="{{$user2}}">
+        <input type="hidden" name="username1" value="{{$username1}}">
+        <input type="hidden" name="username2" value="{{$username2}}">
         <button type="submit">Bloquear</button>
     </form>
 </form>
@@ -27,8 +27,8 @@
 <form action="{{ route('amigos.eliminar') }}" method="POST">
         @csrf
         @method('DELETE')
-        <input type="hidden" name="user1" value="{{$user1}}">
-        <input type="hidden" name="user2" value="{{$user2}}">
+        <input type="hidden" name="username1" value="{{$username1}}">
+        <input type="hidden" name="username2" value="{{$username2}}">
         <button type="submit">Eliminar</button>
 </form>
 
@@ -37,8 +37,8 @@
     
 <form action="{{ route('amigos.add') }}" method="post">
     @csrf
-    <input type="hidden" name="user1" value="{{$user1}}">
-    <input type="hidden" name="user2" value="{{$user2}}">
+    <input type="hidden" name="username1" value="{{$username1}}">
+    <input type="hidden" name="username2" value="{{$username2}}">
     @if($resul == 'pendientesolicita')
     <button type="submit">Solicitud enviada</button>
     @elseif($resul == 'rechazada' | $resul == 'noexiste')
@@ -52,16 +52,16 @@
 <form action="{{ route('amigos.respondersoli') }}" method="POST">
     @csrf
     @method('PUT')
-    <input type="hidden" name="user1" value="{{$user1}}">
-    <input type="hidden" name="user2" value="{{$user2}}">
+    <input type="hidden" name="username1" value="{{$username1}}">
+    <input type="hidden" name="username2" value="{{$username2}}">
 <button type="submit" name="respuesta" value="true">Aceptar</button>
 </form>
 
 <form action="{{ route('amigos.eliminar') }}" method="POST">
     @csrf
     @method('DELETE')
-    <input type="hidden" name="user1" value="{{$user1}}">
-    <input type="hidden" name="user2" value="{{$user2}}">
+    <input type="hidden" name="username1" value="{{$username1}}">
+    <input type="hidden" name="username2" value="{{$username2}}">
 <button type="submit" name="respuesta" value="false">Rechazar</button>
 </form>
 @endif
@@ -71,8 +71,8 @@
     <form action="{{ route('amigos.unblock') }}" method="POST">
         @csrf
         @method('DELETE')
-        <input type="hidden" name="user1" value="{{$user1}}">
-        <input type="hidden" name="user2" value="{{$user2}}">
+        <input type="hidden" name="username1" value="{{$username1}}">
+        <input type="hidden" name="username2" value="{{$username2}}">
         <button type="submit">Desbloquear</button>
     </form>
 @endif

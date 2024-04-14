@@ -109,7 +109,7 @@ Route::put('amigos/responder', [ListaAmigosController::class, 'respondersoli'])-
 Route::delete('amigos/eliminar', [ListaAmigosController::class, 'eliminar'])->name('amigos.eliminar');
 Route::post('amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
 Route::delete('amigos/desbloquear', [ListaAmigosController::class, 'desbloquear'])->name('amigos.unblock');
-Route::get('amigos/ver/{user1}/{user2}', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
+Route::get('amigos/ver/{username1}/{username2}', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
 Route::get('search/perfilbuscado', [ListaAmigosController::class, 'search'])->name('amigos.busqueda');
 
 
