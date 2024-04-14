@@ -34,11 +34,11 @@ class ListaAmigosController extends Controller
 
     }
 
-    public function ver(Request $request){
+    public function ver($user1, $user2){
         $data = new datos();
-        $info = $data->getusername($request);
+        $info = $data->getusername2($user1, $user2);
 
-        $amistad = $data->getamistad($request);
+        $amistad = $data->getamistadtemporal($info[0], $info[1]);
         
 
         if($amistad[0] == null){

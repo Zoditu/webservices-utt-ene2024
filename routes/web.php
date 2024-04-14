@@ -110,7 +110,7 @@ Route::delete('amigos/eliminar', [ListaAmigosController::class, 'eliminar'])->na
 Route::post('amigos/bloquear', [ListaAmigosController::class, 'block'])->name('amigos.block');
 Route::delete('amigos/desbloquear', [ListaAmigosController::class, 'desbloquear'])->name('amigos.unblock');
 //agregar en el controlador por paths buscar la amistad. PENDIENTE
-Route::get('amigos/ver', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
+Route::get('amigos/ver/{user1}/{user2}', [ListaAmigosController::class, 'ver'])->name('amigos.ver');
 Route::get('search/perfilbuscado', [ListaAmigosController::class, 'search'])->name('amigos.busqueda');
 
 

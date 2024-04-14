@@ -12,10 +12,7 @@
 <h3>Usuario buscado: {{strtoupper($user2)}}</h3>
 
 @if($resul == 'aceptada')
-<form action="{{ route('amigos.ver') }}" method="get">
-    @csrf
-    <input type="hidden" name="user1" value="{{$user1}}">
-    <input type="hidden" name="user2" value="{{$user2}}">
+<form action="{{ route('amigos.ver', ['user1' => $user1, 'user2' => $user2]) }}" method="get">
 <button type="submit">Ver Amistad</button>
 </form>
 

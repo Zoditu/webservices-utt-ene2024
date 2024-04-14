@@ -89,6 +89,15 @@ class Datos{
         }
     }
 
+    public function getusername2($user1, $user2){
+
+        $result = DB::selectOne("select username from usuario where name= '".$user1."'");
+        $result2 = DB::selectOne("select username from usuario where name= '".$user2."'");
+
+        return [$result->username, $result2->username, $user1, $user2];
+    }
+
+
 
 }
 ?>;
