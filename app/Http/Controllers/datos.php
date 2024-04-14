@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class Datos{
     public function getuser(Request $request){
-        $user1 = $request->get('user1');
-        $user2 = $request->get('user2');
+        $user1 = $request->input('user1');
+        $user2 = $request->input('user2');
 
         return [$user1, $user2];
     }
