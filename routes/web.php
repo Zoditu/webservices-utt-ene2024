@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;use App\Http\Controllers\ChatController;
+/*VISTA*/
+Route::get('/chats', 'ChatController@index');
 Route::get('/menu-contactos', 'ContactoController@index')->name('menu_contactos');
 Route::post('/agregar-contacto', 'ContactoController@store')->name('agregar_contacto');
+
+
 
 Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
 
@@ -128,3 +132,5 @@ Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@
 
 // Eliminar un mensaje en un chat de un usuario
 Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');
+
+
