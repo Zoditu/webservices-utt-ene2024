@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\datos;
-
+use App\Http\Controllers\Redirect;
 
 
 class ListaAmigosController extends Controller
@@ -13,34 +13,39 @@ class ListaAmigosController extends Controller
 
     public function add(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
+        $nombres = $data->getusername($request);
 
 
        $data=
         [
-           "usuario_solicita" => $info[0],
-           "usuario_recibe" => $info[1],
+           "usuario_solicita" => $nombres[0],
+           "usuario_recibe" => $nombres[1],
            "estado" => 'pendiente'
 
         ];
         
         $insert = DB::table("amistad")->insert($data);
 
-        return view('busqueda', ["resul" => 'true', "user1" => $info[2], "user2" => $info[3]]);
+        if($insert){
+            return redirect()->route('amigos.busqueda');
+        }else{
+            return view('error', ["code" => "404", "error" => "NOT FOUND"]);
+        }
 
     }
 
-    public function ver(Request $request){
+    public function ver($user1, $user2,Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
+        $username1 = $request->route('username1');
+        $username2 = $request->route('username2');
 
-        $amistad = $data->getamistad($request);
+        $amistad = $data->getamistad($username1, $username2);
         
 
         if($amistad[0] == null){
-            return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $info[0], "usu2" => $info[1]]);
+            return view('veramistad', ["fecha" => "NO EXISTE AMISTAD", "usu1" => $user1, "usu2" => $user2]);
         }else{
-            return view('veramistad', ["fecha" => $amistad[0], "usu1" => $info[0], "usu2" => $info[1]]);
+            return view('veramistad', ["fecha" => $amistad[4], "usu1" => $user1, "usu2" => $user2]);
         }
        
     }
@@ -48,65 +53,113 @@ class ListaAmigosController extends Controller
 
     public function block(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
+        $nombres = $data->getusername($request);
 
        $data=
         [
-           "usuario_quebloquea" => $info[0],
-           "usuario_bloqueado" => $info[1],
+           "usuario_quebloquea" => $nombres[0],
+           "usuario_bloqueado" => $nombres[1],
         ];
         
         $insert = DB::table("bloqueo")->insert($data);
 
-        return view('busqueda', ["resul" => 'true', "user1" => $info[2], "user2" => $info[3]]);
+        if($insert){
+        return redirect()->route('amigos.busqueda');
+        }else{
+            return view('error', ["code" => "404", "error" => "NOT FOUND"]);
+        }
     }
 
     public function respondersoli(Request $request){
         $data = new datos();
-        $info = $data->getusername($request);
-        $respuestaboton = $request->get('respuesta');
-        $amistad = $data->getamistad($request);
+        $nombres = $data->getusername($request);
+        $amistad = $data->getamistad($nombres[0], $nombres[1]);
 
-        if($respuestaboton == "true"){
             $update = DB::update("update amistad set estado = 'aceptada' where id_amistad = 
-            '".$amistad[1]."'");
-            $respuesta = "aceptada";
-            return view('busqueda2', ["res" => $respuesta, "user1" => $info[2], "user2" => $info[3]]);
-        }else{
-            $update = DB::update("update amistad set estado = 'rechazada' where id_amistad = 
-            '".$amistad[1]."'");
-            return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
-        }
+            '".$amistad[3]."'");
 
+            if($update){
+                return redirect()->route('amigos.busqueda');  
+            }else{
+                return view('error', ["code" => "404", "error" => "NOT FOUND"]);
+            }
     }
 
         public function eliminar(Request $request){
             $data = new datos();
-            $info = $data->getusername($request);
-            $amistad = $data->getamistad($request);
+            $nombres = $data->getusername($request);
+            $amistad = $data->getamistad($nombres[0], $nombres[1]);
 
-            $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[1]."'");
+            $delete = DB::delete("delete from amistad where id_amistad = '".$amistad[3]."'");
 
-            return view('busqueda', ["resul" => 'false', "user1" => $info[2], "user2" => $info[3]]);
+            return redirect()->route('amigos.busqueda');
+
         }
 
         public function desbloquear(Request $request){
             $data = new datos();
-            $info = $data->getusername($request);
-            $bloqueo = $data->getbloqueo($request);
+            $nombres = $data->getusername($request);
+            $bloqueo = $data->getbloqueo($nombres[0], $nombres[1]);
 
-            $delete = DB::delete("delete from bloqueo where id_bloque = '".$bloqueo."'");
+            $delete = DB::delete("delete from bloqueo where id_bloque = '".$bloqueo[0]."'");
 
-            return "Has desbloqueado al usuario";
+            return redirect()->route('amigos.busqueda');
 
         }
+
+
+
+    
+    public function search(){
+        $data = new datos();
+
+        $result = DB::selectOne("select name from usuario where username= 'aaha'");
+        $user = array_values((array)$result);
+        $str = implode($user);
+    
+        $result2 = DB::selectOne("select name from usuario where username= 'beny06'");
+        $user2 = array_values((array)$result2);
+        $str2 = implode($user2);
+    
+        $bloqueo = $data->getbloqueo('aaha', 'beny06');
+        $amistad = $data->getamistad('aaha','beny06');
+    
+        if($bloqueo != "vacio"){
+            if($bloqueo[1] == 'aaha'){
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'desbloquear', 'username1' => 'aaha', 'username2' => 'beny06' ]);
+            }else{
+                return "NOT FOUND";
+            }
+           }else{
+        switch($amistad[0]){
+            case "pendiente":
+                if($amistad[1] == "aaha"){
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendientesolicita', 'username1' => 'aaha', 'username2' => 'beny06' ]);
+                }else{
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'pendienterecibe', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
+                }
+            case "aceptada":
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'aceptada', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
+            case "rechazada":
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'rechazada', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
+            default:
+                return view("busqueda", ['user1' => $str, 'user2' => $str2, "resul" => 'noexiste', 'username1' => 'aaha', 'username2' => 'beny06'  ]);
+        }
+    }
+}
 
     public function prueba(){
         //$data = new datos();
         //$infor = $data->getuser();
 
        // return $infor[0]->username;
+
        return view('search');
+=======
+       //return view('search');
+       $blok = $data->getbloqueo('aaha', 'beny06');
+
+>>>>>>> f7e9cd715546b5064a1db951cb19c807ac479be1
     }
  
 }
