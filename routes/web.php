@@ -101,7 +101,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
         "ok" => $insert == 1 ? true : false
     ];
 });
-
+/*----------------------------MENSAJES-------------------------------------------*/
 //MENSAJE
 // Leer mensaje
 Route::get('/mensajes', 'MessageController@index');
@@ -122,7 +122,7 @@ Route::get('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageControlle
 Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{id_usuario}', 'MessageController@store');
 
 // Actualizar un mensaje en un chat de un usuario
-Route::put('/usuarios/{id_usuario}/chats/{id_chat}/mensajes/{id_mensaje}/{mensaje}', 'MessageController@update');
+Route::put('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@update');
 
 // Eliminar un mensaje en un chat de un usuario
-Route::delete('/usuarios/{id_usuario}/chats/{id_chat}/mensajes/{id_mensaje}/{mensaje}', 'MessageController@destroy');
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@destroy');
