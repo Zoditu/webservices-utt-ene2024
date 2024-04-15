@@ -116,13 +116,13 @@ Route::put('/mensajes/{id_mensaje}', 'MessageController@update');
 Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy');
 
 // Leer nuevo mensaje en un chat de un usuario
-Route::get('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@show');
+Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@show');
 
 // Almacenar un nuevo mensaje en un chat de un usuario
-Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{id_usuario}', 'MessageController@store');
+Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageController@store');
 
 // Actualizar un mensaje en un chat de un usuario
-Route::put('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@update');
+Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update');
 
 // Eliminar un mensaje en un chat de un usuario
-Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{id_usuario}', 'MessageController@destroy');
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');

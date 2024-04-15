@@ -10,7 +10,7 @@ class Mensaje extends Model
     protected $table = 'mensajes';
 
     protected $fillable = [
-        'id_usuario_envio', 'mensaje', 'fecha', 'fecha_eliminacion', 'FK_id_chat'
+        'username_envio', 'mensaje', 'fecha', 'fecha_eliminacion', 'FK_id_chat'
     ];
 
     public function chat()
@@ -20,6 +20,6 @@ class Mensaje extends Model
 
     public function usuarioEnvio()
     {
-        return $this->belongsTo(Usuario::class, 'id_usuario_envio');
+        return $this->belongsTo(Usuario::class, 'username_envio', 'username');
     }
 }
