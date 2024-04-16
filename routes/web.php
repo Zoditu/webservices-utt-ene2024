@@ -129,27 +129,6 @@ Route::get('/usuario/editar/{username}', function ($username) {
 });
 
 // Recibir datos de la vista para validarlos y luego actualizarlos
-/*Route::post('/usuarios/update/{username}', function (Request $request, $username) {
-    $request->validate([
-        "email" => "email|max:255",
-        "name" => "max:20",
-        "lastName" => "max:50",
-        "phone" => "max:12",
-        "sex" => "max:20",
-        "birth" => "date",
-    ]);
-
-    
-    $fillableFields = $request->only(['email', 'name', 'lastName', 'phone', 'sex', 'birth']);
-
-    // Hacer el updatr a los usuarios
-    DB::table('Usuario')->where('username', $username)->update($fillableFields);
-
-    // Redireccionar a alguna vista o ruta después de la actualización
-    return redirect()->back()->with('success', 'Información actualizada exitosamente.');
-});*/
-
-// Recibir datos de la vista para validarlos y luego actualizarlos
 Route::put('/usuario/update/{username}', function (Request $request, $username) {
     $request->validate([
         "email" => "email|max:255",
