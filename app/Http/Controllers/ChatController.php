@@ -12,7 +12,7 @@ class ChatController extends Controller
     {
         $messages = Message::all();
         return view('chat.index', compact('messages'));
-        return view('chats');
+        return view('Menu-de-mensajes');
     }
 }
 
