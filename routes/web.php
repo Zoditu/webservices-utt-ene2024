@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\DB;use App\Http\Controllers\ChatController;
 
 /*VISTA*/
 /*Route::get('/chat', 'ChatController@index');*/
-Route::get('/mensajes', [MessageController::class, 'método']);
+/*Route::get('/mensaje', [MessageController::class, 'store']);*/
+
+Route::post('/mensaje', [MessageController::class, 'store']);
 Route::post('/mensajes', 'MessageController@store');
 /*Route::get('/menu-contactos', 'MessageController@showContactMenu')->name('menu_contactos');
 Route::post('/agregar-contacto', 'MessageController@addContact')->name('agregar_contacto');*/
