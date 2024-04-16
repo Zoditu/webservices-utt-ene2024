@@ -102,7 +102,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
 
 
 // deshabilitar usuario
-Route::get('/deshabilitar', function(Request $request) {
+Route::get('/usuario/deshabilitar', function(Request $request) {
     $username = strtolower($request->input('user')); // tomo el valor del request y lo estandarizo al lowercase como en el registro
 
     // aqui verifico si el usuario si existe en la bd
@@ -122,13 +122,14 @@ Route::get('/deshabilitar', function(Request $request) {
 // editar perfil
 
 
-Route::get('/editar-usuario/{username}', function ($username) {
+// Recibir datos y mandarlos a editar-user.blade.php
+Route::get('/usuario/editar/{username}', function ($username) {
     $usuario = DB::table('Usuario')->where('username', $username)->first();
     return view('editar-user', compact('usuario'));
 });
 
-Route::post('/editar-usuario/{username}', function (Request $request, $username) {
-    // Validar la solicitud
+// Recibir datos de la vista para validarlos y luego actualizarlos
+/*Route::post('/usuarios/update/{username}', function (Request $request, $username) {
     $request->validate([
         "email" => "email|max:255",
         "name" => "max:20",
@@ -136,13 +137,32 @@ Route::post('/editar-usuario/{username}', function (Request $request, $username)
         "phone" => "max:12",
         "sex" => "max:20",
         "birth" => "date",
-        // Puedes agregar más validaciones según sea necesario
     ]);
 
-    // Filtrar todos los campos actualizables
+    
     $fillableFields = $request->only(['email', 'name', 'lastName', 'phone', 'sex', 'birth']);
 
-    // Actualizar la información del usuario
+    // Hacer el updatr a los usuarios
+    DB::table('Usuario')->where('username', $username)->update($fillableFields);
+
+    // Redireccionar a alguna vista o ruta después de la actualización
+    return redirect()->back()->with('success', 'Información actualizada exitosamente.');
+});*/
+
+// Recibir datos de la vista para validarlos y luego actualizarlos
+Route::put('/usuario/update/{username}', function (Request $request, $username) {
+    $request->validate([
+        "email" => "email|max:255",
+        "name" => "max:20",
+        "lastName" => "max:50",
+        "phone" => "max:12",
+        "sex" => "max:20",
+        "birth" => "date",
+    ]);
+
+    $fillableFields = $request->only(['email', 'name', 'lastName', 'phone', 'sex', 'birth']);
+
+    // Hacer el update a los usuarios
     DB::table('Usuario')->where('username', $username)->update($fillableFields);
 
     // Redireccionar a alguna vista o ruta después de la actualización

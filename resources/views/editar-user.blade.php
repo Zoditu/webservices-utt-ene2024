@@ -14,9 +14,9 @@
         <div>{{ session('success') }}</div>
     @endif
 
-    <form method="POST" action="{{ url('/editar-usuario/'.$usuario->username) }}">
+    <form method="POST" action="{{ url('/usuario/update/'.$usuario->username) }}">
         @csrf
-        @method('POST')
+        @method('PUT')
         
         <!-- Campos del formulario -->
         <label for="email">Email:</label>
