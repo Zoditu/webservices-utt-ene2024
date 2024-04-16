@@ -65,13 +65,12 @@ Route::get('/profile', function (Request $req) {
     return $entorno;*/
 });
 
+//Se creó un controlador llamado RegisterUsername, en él se tienen todas la funciones del endpoint registrar
 Route::get('/registrar', [RegisterUsername::class, 'ViewRegister']);
 
+//Se usa el mismo controlador, sólo que se usa la función de RegisterUser
 Route::match(['get', 'post'], '/register/{username}', [RegisterUsername::class, 'RegisterUser']);
 
-Route::get('/token', function (Request $req) {
-    return view('token');
-});
-
+//También se usan controladores llamados ValidarToken
 Route::get('/token/estado/{token}', [ValidarToken::class, 'VTokenPost']);
 Route::get('/token/deny/{token}', [ValidarToken::class, 'CTokenPost']);
