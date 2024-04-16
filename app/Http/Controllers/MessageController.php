@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Message;
+/*use App\Models\Message;*/
+use App\Models\Mensaje;
+/*php artisan make:model Mensaje
 
 class MessageController extends Controller
 {
@@ -18,14 +20,14 @@ class MessageController extends Controller
         // Validar la solicitud
         $request->validate([
             'content' => 'required|string|max:500',
-            'user_id' => 'required|exists:users,id', // Asegúrate de que el usuario exista
+            'username' => 'required|exists:users,id', // Asegúrate de que el usuario exista
             'chat_id' => 'required|exists:chats,id', // Asegúrate de que el chat exista
         ]);
 
         // Crear un nuevo mensaje
         $message = new Message();
         $message->content = $request->content;
-        $message->user_id = $request->user_id;
+        $message->username = $request->username;
         $message->chat_id = $request->chat_id;
         $message->save();
 
@@ -66,10 +68,10 @@ class MessageController extends Controller
         return redirect()->back()->with('success', 'Mensaje eliminado correctamente.');
     }
 
-    public function show($id_chat, $mensaje, $id_usuario)
+    public function show($id_chat, $mensaje, $username)
     {
         $message = Message::where('chat_id', $id_chat)
-                      ->where('user_id', $id_usuario)
+                      ->where('user_id', $username)
                       ->where('content', $mensaje)
                       ->first();
 
@@ -81,5 +83,29 @@ class MessageController extends Controller
             // Si el mensaje no se encuentra, puedes retornar un mensaje de error.
             return response()->json(['error' => 'Mensaje no encontrado.']);
         }
+    }
+}
+*/
+
+class MessageController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'username_envio' => 'required',
+            'mensaje' => 'required',
+            'FK_id_chat' => 'required',
+        ]);
+
+        // Crear un nuevo mensaje en la base de datos
+        Mensaje::create([
+            'username_envio' => $request->username_envio,
+            'mensaje' => $request->mensaje,
+            'FK_id_chat' => $request->FK_id_chat,
+        ]);
+
+        // Devolver una respuesta
+        return response()->json(['message' => 'Mensaje enviado correctamente'], 200);
     }
 }
