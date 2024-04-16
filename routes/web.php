@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BusquedaController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -101,6 +103,4 @@ Route::post('/register/{username}', function(Request $request, $username) {
     ];
 });
 
-
-
-Route::get('/busqueda', 'BusquedaController@buscar');
+Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('buscar');
