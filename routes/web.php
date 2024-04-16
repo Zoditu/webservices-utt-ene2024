@@ -13,14 +13,19 @@ use Illuminate\Support\Facades\Route;
 */
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\DB;use App\Http\Controllers\ChatController;
-/*VISTA*/
-Route::get('/chat', 'ChatController@index');
-Route::get('/menu-contactos', 'MessageController@showContactMenu')->name('menu_contactos');
-Route::post('/agregar-contacto', 'MessageController@addContact')->name('agregar_contacto');
 
-Route::get('/menu-contactos', 'ContactoController@index')->name('menu_contactos');
-Route::post('/agregar-contacto', 'ContactoController@store')->name('agregar_contacto');
+
+/*VISTA*/
+/*Route::get('/chat', 'ChatController@index');*/
+Route::get('/mensajes', [MessageController::class, 'método']);
+Route::post('/mensajes', 'MessageController@store');
+/*Route::get('/menu-contactos', 'MessageController@showContactMenu')->name('menu_contactos');
+Route::post('/agregar-contacto', 'MessageController@addContact')->name('agregar_contacto');*/
+
+/*Route::get('/menu-contactos', 'ContactoController@index')->name('menu_contactos');
+Route::post('/agregar-contacto', 'ContactoController@store')->name('agregar_contacto');*/
 
 
 
@@ -113,7 +118,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
 /*----------------------------MENSAJES-------------------------------------------*/
 //MENSAJE
 // Leer mensaje
-Route::get('/mensajes', 'MessageController@index');
+/*Route::get('/mensajes', 'MessageController@index');
 
 // Enviar mensaje
 Route::post('/mensajes', 'MessageController@store');
@@ -134,6 +139,20 @@ Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageC
 Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update');
 
 // Eliminar un mensaje en un chat de un usuario
-Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');*/
+
+Route::get('/chat', 'ChatController@index');
+
+// Rutas relacionadas con los mensajes
+Route::get('/mensajes', 'MessageController@index'); // Mostrar todos los mensajes
+Route::post('/mensajes', 'MessageController@store'); // Crear un nuevo mensaje
+Route::put('/mensajes/{id_mensaje}', 'MessageController@update'); // Editar un mensaje
+Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy'); // Eliminar un mensaje
+
+// Rutas adicionales relacionadas con los chats y los usuarios
+Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@show'); // Leer nuevo mensaje en un chat de un usuario
+Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageController@store'); // Almacenar un nuevo mensaje en un chat de un usuario
+Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update'); // Actualizar un mensaje en un chat de un usuario
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy'); // Eliminar un mensaje en un chat de un usuario
 
 
