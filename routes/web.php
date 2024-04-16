@@ -16,7 +16,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;use App\Http\Controllers\ChatController;
 /*VISTA*/
 Route::get('/chat', 'ChatController@index');
-Route::get('/chat', 'MessageController@index');
+Route::get('/menu-contactos', 'MessageController@showContactMenu')->name('menu_contactos');
+Route::post('/agregar-contacto', 'MessageController@addContact')->name('agregar_contacto');
+
 Route::get('/menu-contactos', 'ContactoController@index')->name('menu_contactos');
 Route::post('/agregar-contacto', 'ContactoController@store')->name('agregar_contacto');
 
