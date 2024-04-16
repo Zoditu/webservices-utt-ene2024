@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -99,3 +100,7 @@ Route::post('/register/{username}', function(Request $request, $username) {
         "ok" => $insert == 1 ? true : false
     ];
 });
+
+
+
+Route::get('/busqueda', 'BusquedaController@buscar');
