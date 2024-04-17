@@ -188,23 +188,30 @@ Route::post('/mensajes', function (Request $request) {
 });
 
 /*----------------------EDITAR MENSAJES--------------------------------*/
+// Define la ruta que usa el modelo Mensaje para editar un mensaje por id_mensaje
+Route::put('/mensajes/{id_mensaje}', function (Request $request, $id_mensaje) {
+    // Instancia el modelo Mensaje
+    $mensaje = new Mensaje();
 
-// Ruta para editar un mensaje por username_envio
-Route::put('/mensajes/{username_envio}', function (Request $request, $username_envio) {
+    // Especifica el nombre de la clave primaria
+    $mensaje->setKeyName('id_mensaje');
+
     // Validar los datos del mensaje a editar
     $request->validate([
         'mensaje' => 'required|string',
+        'username_envio' => 'required|string',
         'FK_id_chat' => 'required|integer',
         // Puedes agregar más reglas de validación según tus necesidades
     ]);
 
-    // Buscar el mensaje por username_envio
-    $mensaje = Mensaje::where('username_envio', $username_envio)->first();
+    // Buscar el mensaje por id_mensaje
+    $mensaje = Mensaje::find($id_mensaje);
 
     // Verificar si se encontró el mensaje
     if ($mensaje) {
         // Actualizar los campos del mensaje con los datos recibidos
         $mensaje->mensaje = $request->input('mensaje');
+        $mensaje->username_envio = $request->input('username_envio');
         $mensaje->FK_id_chat = $request->input('FK_id_chat');
         // Puedes asignar más atributos al mensaje si es necesario
 
@@ -224,7 +231,7 @@ Route::put('/mensajes/{username_envio}', function (Request $request, $username_e
 /*----------------------ELIMINAR MENSAJES--------------------------------*/
 
 // Eliminar mensaje
-Route::delete('/mensajes/{id}', function ($id) {
+/*Route::delete('/mensajes/{id}', function ($id) {
     // Convertir el id a entero
     $id = intval($id);
 
@@ -234,6 +241,39 @@ Route::delete('/mensajes/{id}', function ($id) {
     if ($deleted) {
         return response()->json(['mensaje' => 'Mensaje eliminado correctamente'], 200);
     } else {
+        return response()->json(['mensaje' => 'Mensaje no encontrado'], 404);
+    }
+});*/
+
+Route::delete('/mensajes/{id}', function ($id) {
+    // Convertir el id a entero
+    $id = intval($id);
+
+    // Eliminar el mensaje por su id
+    $deleted = DB::table('mensajes')->where('id', $id)->delete();
+
+    if ($deleted) {
+        return response()->json(['mensaje' => 'Mensaje eliminado correctamente'], 200);
+    } else {
+        return response()->json(['mensaje' => 'Mensaje no encontrado'], 404);
+    }
+});
+
+/*----------------------VER MENSAJES--------------------------------*/
+
+// VER mensajes
+Route::get('/mensajes/{id}', function ($id) {
+    // Convertir el id a entero
+    $id = intval($id);
+
+    // Consultar la base de datos para obtener el mensaje por su ID
+    $mensaje = DB::table('mensajes')->where('id', $id)->first();
+
+    if ($mensaje) {
+        // Si se encuentra el mensaje, devolverlo como JSON
+        return response()->json(['mensaje' => $mensaje], 200);
+    } else {
+        // Si no se encuentra el mensaje, devolver un mensaje de error
         return response()->json(['mensaje' => 'Mensaje no encontrado'], 404);
     }
 });
