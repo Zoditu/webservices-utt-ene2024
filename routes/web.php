@@ -189,15 +189,33 @@ Route::post('/mensajes', function (Request $request) {
 
 /*----------------------EDITAR MENSAJES--------------------------------*/
 
-// Ruta para actualizar un mensaje
-Route::put('/mensaje/{id_mensaje}', function (Request $request, $id_mensaje) {
-    $mensaje = Mensaje::where('id_mensaje', $id_mensaje)->first();
+// Ruta para editar un mensaje por username_envio
+Route::put('/mensajes/{username_envio}', function (Request $request, $username_envio) {
+    // Validar los datos del mensaje a editar
+    $request->validate([
+        'mensaje' => 'required|string',
+        'FK_id_chat' => 'required|integer',
+        // Puedes agregar más reglas de validación según tus necesidades
+    ]);
 
+    // Buscar el mensaje por username_envio
+    $mensaje = Mensaje::where('username_envio', $username_envio)->first();
+
+    // Verificar si se encontró el mensaje
     if ($mensaje) {
-        $mensaje->update($request->all());
-        return response()->json($mensaje);
+        // Actualizar los campos del mensaje con los datos recibidos
+        $mensaje->mensaje = $request->input('mensaje');
+        $mensaje->FK_id_chat = $request->input('FK_id_chat');
+        // Puedes asignar más atributos al mensaje si es necesario
+
+        // Guardar los cambios en la base de datos
+        $mensaje->save();
+
+        // Devolver una respuesta de éxito
+        return response()->json(['mensaje' => 'Mensaje actualizado correctamente'], 200);
     } else {
-        return response()->json(['message' => 'Mensaje no encontrado'], 404);
+        // Si el mensaje no se encuentra, devolver un mensaje de error
+        return response()->json(['mensaje' => 'Mensaje no encontrado'], 404);
     }
 });
 
