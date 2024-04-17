@@ -11,18 +11,30 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Mensaje as MensajeModel;
+use App\Models\Mensaje;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\MessageController;
-use Illuminate\Support\Facades\DB;use App\Http\Controllers\ChatController;
+/*use App\Http\Controllers\MessageController;*/
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ChatController;
 
 
 /*VISTA*/
 /*Route::get('/chat', 'ChatController@index');*/
-/*Route::get('/mensaje', [MessageController::class, 'store']);*/
-
-Route::post('/mensaje', [MessageController::class, 'store']);
+/*Route::get('/mensaje', [MessageController::class, 'store']);
 Route::post('/mensajes', 'MessageController@store');
+Route::post('/mensajes', [MessageController::class, 'store']);
+Route::post('/mensajes', 'App\Http\Controllers\MessageController@store');
+
+Route::post('/mensajes', 'MessageController@store')->name('mensajes');*
+
+
+Route::post('/mensajes', 'MessageController@store');*/
 /*Route::get('/menu-contactos', 'MessageController@showContactMenu')->name('menu_contactos');
 Route::post('/agregar-contacto', 'MessageController@addContact')->name('agregar_contacto');*/
 
@@ -118,32 +130,144 @@ Route::post('/register/{username}', function(Request $request, $username) {
     ];
 });
 /*----------------------------MENSAJES-------------------------------------------*/
-//MENSAJE
-// Leer mensaje
-/*Route::get('/mensajes', 'MessageController@index');
+// Ruta para almacenar un mensaje en la base de datos
+Route::post('/mensajes', function (Request $request) {
+    // Validar los datos recibidos
+    $request->validate([
+        'username_envio' => 'required',
+        'mensaje' => 'required',
+        'FK_id_chat' => 'required',
+    ]);
 
-// Enviar mensaje
-Route::post('/mensajes', 'MessageController@store');
+    // Obtener los datos del request
+    $usernameEnvio = $request->input('username_envio');
+    $mensaje = $request->input('mensaje'); // Aquí estaba 'mensajes', debe ser 'mensaje'
+    $idChat = $request->input('FK_id_chat');
 
-// Editar mensaje
-Route::put('/mensajes/{id_mensaje}', 'MessageController@update');
+    // Insertar el mensaje en la base de datos
+    DB::table('mensajes')->insert([
+        'username_envio' => $usernameEnvio,
+        'mensaje' => $mensaje, // Aquí estaba 'mensajes', debe ser 'mensaje'
+        'FK_id_chat' => $idChat,
+    ]);
+
+    // Retornar una respuesta de éxito
+    return response()->json(['mensaje' => 'Mensaje almacenado correctamente'], 200);
+});
+
+
+// Ruta para leer mensajes
+Route::get('/mensajes', function () {
+    // Lógica para leer mensajes
+});
+
+
+/*----------------------ENVIAR MENSAJES--------------------------------*/
+// Ruta para enviar mensajes
+Route::post('/mensajes', function (Request $request) {
+    // Validar los datos del mensaje
+    $request->validate([
+        'mensaje' => 'required|string',
+        'username_envio' => 'required|string',
+        'FK_id_chat' => 'required|integer',
+        // Puedes agregar más reglas de validación según tus necesidades
+    ]);
+
+    // Crear un nuevo mensaje con los datos recibidos
+    $mensaje = new MensajeModel();
+    $mensaje->mensaje = $request->input('mensaje');
+    $mensaje->username_envio = $request->input('username_envio');
+    $mensaje->FK_id_chat = $request->input('FK_id_chat');
+    // Puedes asignar más atributos al mensaje si es necesario
+
+    // Guardar el mensaje en la base de datos
+    $mensaje->save();
+
+    // Devolver una respuesta de éxito
+    return response()->json(['mensaje' => 'Mensaje agregado correctamente'], 201);
+});
+
+/*----------------------EDITAR MENSAJES--------------------------------*/
+
+// Ruta para actualizar un mensaje
+Route::put('/mensaje/{id_mensaje}', function (Request $request, $id_mensaje) {
+    $mensaje = Mensaje::where('id_mensaje', $id_mensaje)->first();
+
+    if ($mensaje) {
+        $mensaje->update($request->all());
+        return response()->json($mensaje);
+    } else {
+        return response()->json(['message' => 'Mensaje no encontrado'], 404);
+    }
+});
+
+
+
+/*----------------------ELIMINAR MENSAJES--------------------------------*/
 
 // Eliminar mensaje
-Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy');
+Route::delete('/mensajes/{id}', function ($id) {
+    // Convertir el id a entero
+    $id = intval($id);
+
+    // Eliminar el mensaje por su id_mensaje
+    $deleted = DB::table('mensajes')->where('id_mensaje', $id)->delete();
+
+    if ($deleted) {
+        return response()->json(['mensaje' => 'Mensaje eliminado correctamente'], 200);
+    } else {
+        return response()->json(['mensaje' => 'Mensaje no encontrado'], 404);
+    }
+});
 
 // Leer nuevo mensaje en un chat de un usuario
-Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@show');
+Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', function ($id_chat, $mensaje, $username) {
+    // Lógica para leer nuevos mensajes en un chat de un usuario
+});
 
 // Almacenar un nuevo mensaje en un chat de un usuario
-Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageController@store');
+Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', function ($id_chat, $mensaje, $username) {
+    // Lógica para almacenar nuevos mensajes en un chat de un usuario
+});
 
 // Actualizar un mensaje en un chat de un usuario
-Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update');
+Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', function ($id_chat, $mensaje, $username) {
+    // Lógica para actualizar mensajes en un chat de un usuario
+});
 
 // Eliminar un mensaje en un chat de un usuario
-Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');*/
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', function ($id_chat, $mensaje, $username) {
+    // Lógica para eliminar mensajes en un chat de un usuario
+});
 
-Route::get('/chat', 'ChatController@index');
+
+//MENSAJE
+// Leer mensaje
+//Route::get('/mensajes', 'MessageController@index');
+
+// Enviar mensaje
+//Route::post('/mensajes', 'MessageController@store');
+/*Route::post('/store', [MessageController::class,'store'])->name('store');*/
+
+// Editar mensaje
+//Route::put('/mensajes/{id_mensaje}', 'MessageController@update');
+
+// Eliminar mensaje
+//Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy');
+
+// Leer nuevo mensaje en un chat de un usuario
+//Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@show');
+
+// Almacenar un nuevo mensaje en un chat de un usuario
+//Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageController@store');
+
+// Actualizar un mensaje en un chat de un usuario
+//Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update');
+
+// Eliminar un mensaje en un chat de un usuario
+//Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy');
+
+/*Route::get('/chat', 'ChatController@index');
 
 // Rutas relacionadas con los mensajes
 Route::get('/mensajes', 'MessageController@index'); // Mostrar todos los mensajes
@@ -155,6 +279,6 @@ Route::delete('/mensajes/{id_mensaje}', 'MessageController@destroy'); // Elimina
 Route::get('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@show'); // Leer nuevo mensaje en un chat de un usuario
 Route::post('/chats/{id_chat}/mensajes/{mensaje}/usuarios/{username}', 'MessageController@store'); // Almacenar un nuevo mensaje en un chat de un usuario
 Route::put('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@update'); // Actualizar un mensaje en un chat de un usuario
-Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy'); // Eliminar un mensaje en un chat de un usuario
+Route::delete('/chats/{id_chat}/mensajes/{mensaje}/{username}', 'MessageController@destroy'); // Eliminar un mensaje en un chat de un usuario*/
 
 

@@ -112,7 +112,7 @@ class MessageController extends Controller
     }
 }*/
 
-class MessageController extends Controller
+/*class MessageController extends Controller
 {
     public function store(Request $request)
     {
@@ -133,6 +133,48 @@ class MessageController extends Controller
         // Devolver una respuesta
         return response()->json(['message' => 'Mensaje enviado correctamente'], 200);
     }
+}*/
+
+class MessageController extends Controller
+{
+    public function index()
+    {
+        // Lógica para mostrar todos los mensajes
+    }
+
+    public function store(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'username_envio' => 'required',
+            'mensaje' => 'required',
+            'FK_id_chat' => 'required',
+        ]);
+
+        // Crear un nuevo mensaje en la base de datos
+        $mensaje = new Mensaje();
+        $mensaje->username_envio = $request->username_envio;
+        $mensaje->mensaje = $request->mensaje;
+        $mensaje->FK_id_chat = $request->FK_id_chat;
+        $mensaje->save();
+
+        // Devolver una respuesta
+        return response()->json(['message' => 'Mensaje enviado correctamente'], 200);
+    }
+
+    public function update($id_mensaje)
+    {
+        // Lógica para editar un mensaje
+    }
+
+    public function destroy($id_mensaje)
+    {
+        // Lógica para eliminar un mensaje
+    }
+
+    public function show($id_chat, $mensaje, $username)
+    {
+        // Lógica para mostrar un mensaje en un chat de un usuario
+    }
+
 }
-
-
